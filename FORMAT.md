@@ -83,7 +83,7 @@ The joint refers to a massless degree of freedom.
   - ty
   - tz
 
-## `<Robot>` 
+## `<robot>` 
 
 The robot element is the root element of a robot model.
 
