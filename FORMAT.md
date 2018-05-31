@@ -6,7 +6,7 @@ Examples of this format in use can be seen in the kits in this directory.
 
 ## Version and versioning
 
-The following specification is version 1.0.0 of this format.
+The following specification is version 1.0.1 of this format.
 
 The version numbering follows semantic versioning practices. Major version changes (e.g., 1.x.x->2.x.x) imply non-backwards compatible changes, whereas minor version changes (e.g., 1.3.0->1.4.0) imply backwards compatibility: existing robot configuration files will work with the updated specification, although files specifically using the newer specification may not be supported by tools using an older version of the standard.  Revision changes (1.4.2 -> 1.4.3) imply only clarification of the documentation, and should be treated as compatible.  Each new version change of the specification will be associated with a tag/release in this repository.
 
