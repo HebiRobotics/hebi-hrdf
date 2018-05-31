@@ -67,8 +67,8 @@ The rigid body refers to a solid body with mass and one or more outputs.
 **Optional attributes:**
 - `com_rot` (3x3 rotation matrix, row-major) the orientation of the center of mass (used for simplifying the inertia tensor description if desired).  Defaults to identity.
 - `com_trans` (3x1 vector) The position of the center of mass.  Defaults to (0,0,0).
-- `output_rot` (3x3 rotation matrix, row-major): the orientation of the output frame. Defaults to "not given" (no output). If this is given, then only one "output" child element is allowed, and that "output" child cannot define its own rotation and translation.
-- `output_trans` (3x1 vector): The position the output frame.  Defaults to "not given" (no output). If this is given, then only one "output" child element is allowed, and that "output" child cannot define its own rotation and translation.
+- `output_rot` (3x3 rotation matrix, row-major): the orientation of the output frame. Defaults to "not given" (no output), although APIs may define this as an identity matrix if they do not support no-output rigid bodies.
+- `output_trans` (3x1 vector): The position the output frame.  Defaults to "not given" (no output), although APIs may define this as an (0,0,0) if they do not support no-output rigid bodies.
 
 ### `<joint>`
 
@@ -107,7 +107,6 @@ The `robot` element can only contain `<elem>` subelements.  It contains an impli
 ```
 
 When there is a list of `<elem>` elements, they are assumed to following each other in a kinematic chain - here, elem2 is more distal than elem1:
-
 
 ```
 <robot>
