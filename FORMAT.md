@@ -6,17 +6,88 @@ Examples of this format in use can be seen in the kits in this directory.
 
 ## Version and versioning
 
-The following specification is version 1.0.0 of this format.
+The following specification is version 1.1.0 of this format.
 
 The version numbering follows semantic versioning practices. Major version changes (e.g., 1.x.x->2.x.x) imply non-backwards compatible changes, whereas minor version changes (e.g., 1.3.0->1.4.0) imply backwards compatibility: existing robot configuration files will work with the updated specification, although files specifically using the newer specification may not be supported by tools using an older version of the standard.  Revision changes (1.4.2 -> 1.4.3) imply only clarification of the documentation, and should be treated as compatible.  Each new version change of the specification will be associated with a tag/release in this repository.
 
+## Terms
+
+When the term _whitespace_ is used in this document, it will refer to the ASCII space, tab, carriage return, and new line characters (values in the string " \t\r\n").
+
+## Types
+
+The attributes supported by the elements are of several basic types.
+
+### enums
+
+Enum types are lists of possible values that a certain attribute can have.
+
+Implementation note: When parsing strings that are "enum" values (e.g., the "type" attribute of an actuator or link element), implementations should support reading these values in without regard to case (e.g., a value of "X5-1" or "x5-1" should both be interpreted correctly).  In the case of non-matching case, a warning should be provided by the API when importing the file.  If implementations support writing HRDF files, the case shown in this document should be written.
+
+### floating point
+
+Attributes which define a floating point value support basic parsing using the following regex:
+
+`[-]?\d+(\.\d+)?([eE][+-]?\d+)?`
+
+Essentially, this is a number in a format such as 3.325e-2 (where the scientific notation "e-2" extension is optional).
+
+### floating point formula
+
+Attributes which define a floating point formula value support a grammar to parse numerical values and simple formula elements.  Basically, these support parenthesis, plus, minus, multiply, and divide operators, as well as the constant "pi".  Using "UNSIGNED_FLOAT" as equivalent to the floating point attribute definition above, but restricted to no sign before the number, the basic grammar for the "expression" is:
+
+```
+expression
+    : term
+    | expression '+' term
+    | expression '-' term
+    ;
+
+term
+    : factor
+    | term '*' factor
+    | term '/' factor
+    ;
+
+factor
+    : UNSIGNED_FLOAT
+    | "pi"
+    | '-' factor
+    | '(' expression ')'
+    ;
+```
+
+### rotation matrix
+
+Attributes which define a rotation matrix support either a row-major, whitespace delineated list of the 9 elements in a 3x3 rotation matrix, or a grammar to parse combinations of axis-aligned rotations.  For the 9 element list, each element supports the basic "floating point" attribute parsing described above. For the combinations of axis-aligned rotations, the grammar is defined as follows:
+
+```
+rotation_expression
+    : rotation_term
+    | rotation_expression '*' rotation_term
+    ;
+
+term
+   : "Rx(" expression ')'
+   | "Ry(" expression ')'
+   | "Rz(" expression ')'
+```
+
+The `expression` token in the above grammar is the same one defined by the floating point formula grammar.
+
+### translation vector
+
+Attributes which define a translation vector support a whitespace delineated list of the 3 elements of a cartesian (x,y,z) vector.
+
 ## Robot Elements
 
-Each "robot element" has an assumed input interface, and zero or one output interfaces. It may or may not have mass and inertia, depending on its type.  Note that the rotation matrix are given as a row-major, space delineated lists of numbers, and the vectors are also space delineated.
+Each "robot element" has an assumed input interface, and one output interface. It may or may not have mass and inertia, depending on its type.
+
+Note that the parsing of the element name (e.g., `actuator`) is case sensitive, and so `Actuator` will generate and error.
 
 ### `<actuator>`
 
-The actuator element represents actuators such as the X5-4.  It is assumed to have a mass and inertia, as well as an output interface.  All actuators have one output interface.  It is assumed that there is an associated degree of freedom in the robot model with this element.
+The actuator element represents actuators such as the X5-4.  It is assumed to have a mass and inertia, as well as an output interface.  All actuators have one output interface.  It is assumed that there is a single associated degree of freedom in the robot model with this element.
 
 **Required attributes:**
 - `type` (string/enum) Currently supported values:
@@ -37,8 +108,8 @@ The link element refers to a parameterized rigid body with two parameters (exten
 
 **Required attributes:**
 - `type` (string/enum) the only currently supported value is X5
-- `extension` (floating point value, meters)
-- `twist` (floating point value, radians)
+- `extension` (floating point formula, meters)
+- `twist` (floating point formula, radians)
 
 **Example:**
 
@@ -59,16 +130,18 @@ The bracket element refers to a rigid body that connects modules, such as a ligh
 
 ### `<rigid-body>`
 
-The rigid body refers to a solid body with mass and one or more outputs.
+The rigid body refers to a solid body with mass and one output.
 
 **Required attributes:**
-`mass` (floating point)
+`mass` (floating point formula, kg)
 
 **Optional attributes:**
-- `com_rot` (3x3 rotation matrix, row-major) the orientation of the center of mass (used for simplifying the inertia tensor description if desired).  Defaults to identity.
-- `com_trans` (3x1 vector) The position of the center of mass.  Defaults to (0,0,0).
-- `output_rot` (3x3 rotation matrix, row-major): the orientation of the output frame.  Defaults to identity.
-- `output_trans` (3x1 vector): The position the output frame.  Defaults to (0,0,0).
+- `com_rot` (rotation matrix) the orientation of the center of mass (used for simplifying the inertia tensor description if desired).  Defaults to identity.
+- `com_trans` (translation vector, m) The position of the center of mass.  Defaults to (0,0,0).
+- `output_rot` (rotation matrix): the orientation of the output frame.  Defaults to identity.
+- `output_trans` (translation vector, m): The position the output frame.  Defaults to (0,0,0).
+
+- `ixx`, `iyy`, `izz`, `ixy`, `ixz`, `iyz` (floating point formulae, kg m^2) The 6 elements of the inertia tensor, relative to the COM frame as given above.  Each defaults to 0 (note, this means to overall default is a point mass).
 
 ### `<joint>`
 
@@ -83,13 +156,42 @@ The joint refers to a massless degree of freedom.
   - ty
   - tz
 
+### Offsetting and overwriting dynamic properties
+
+The built in robot model elements (`actuator`, `link`, and `bracket`) all have attributes that allow modification or overwriting of certain properties.
+
+**Offset**
+The optional offset attributes set a constant offset from the library values (e.g., to account for an additional weight on a module).
+
+- `mass_offset` (floating point formula, kg) offset to be added (or subtracted) to the mass
+- `com_trans_offset` (translation vector) offset to be added to the center of mass position
+
+**Override**
+The optional override attributes completely override the library values.  These have the same meaning/types as for the `rigid_body` element.
+- `mass`
+- `com_rot`
+- `com_trans`
+- `ixx`
+- `iyy`
+- `izz`
+- `ixy`
+- `ixz`
+- `iyz`
+
+Note: the HRDF file is ill-formed and should generate a parsing error if both `mass` and `mass_offset` attributes are defined, and similarly should fail if both `com_trans` and `com_trans_offset` elements are defined.
+
 ## `<robot>` 
 
 The robot element is the root element of a robot model.
 
+**Required Attributes for v > 1.0.0**
+- `version` (enum) Specifies the version number of the HRDF format used to define this file.  To allow parsing of v1.0.0 files, this defaults to `1.0.0` if not given.  The rules used to parse the file are defined by the given version.  For example, a `mass_offset` attribute on an actuator may cause a parsing error if this attribute is not given, or is set to `1.0.0`. Supported values are:
+  - 1.0.0
+  - 1.1.0
+
 **Optional Attributes**
-`rot` (3x3 floating point rotation matrix) specify the rotation of the base frame of the model; defaults to identity matrix.
-`trans` (3 element floating point vector) specify the translation to the base frame of the model; defaults to (0,0,0)
+- `rot` (rotation matrix) specify the rotation of the base frame of the model; defaults to identity matrix.
+- `trans` (translation vector) specify the translation to the base frame of the model; defaults to (0,0,0)
 
 **Example**
 `<robot rot="1 0 0 0 1 0 0 0 1" trans="0 0 0"/>`
