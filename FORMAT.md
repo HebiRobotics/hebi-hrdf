@@ -28,7 +28,7 @@ Implementation note: When parsing strings that are "enum" values (e.g., the "typ
 
 Attributes which define a floating point value support basic parsing using the following regex:
 
-`[-]?\d+(\.\d+)?([eE][+-]?\d+)?`
+`[-+]?\d+(\.\d+)?([eE][+-]?\d+)?`
 
 Essentially, this is a number in a format such as 3.325e-2 (where the scientific notation "e-2" extension is optional).
 
