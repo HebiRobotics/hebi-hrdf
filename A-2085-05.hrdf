@@ -1,10 +1,10 @@
-<robot>
+<robot version="1.1.0">
   <actuator type="X8-9"/>
   <bracket type="X5HeavyRightOutside"/>
   <actuator type="X8-16"/>
-  <link type="X5" extension="0.325" twist="3.14159265358979323846264338327950288"/>
+  <link type="X5" extension="0.325" twist="pi"/>
   <actuator type="X8-9"/>
-  <link type="X5" extension="0.325" twist="3.14159265358979323846264338327950288"/>
+  <link type="X5" extension="0.325" twist="pi"/>
   <actuator type="X5-1"/>
   <bracket type="X5LightRight"/>
   <actuator type="X5-1"/>
