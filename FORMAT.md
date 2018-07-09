@@ -75,7 +75,9 @@ The actuator element represents actuators such as the X5-4.  It is assumed to ha
 
 **Example:**
 
-`<actuator type="X5-9"/>`
+```xml
+<actuator type="X5-9"/>
+```
 
 ### `<link>`
 
@@ -88,7 +90,9 @@ The link element refers to a parameterized rigid body with two parameters (exten
 
 **Example:**
 
-`<link type="X5" extension="0.25" twist="1.57"/>`
+```xml
+<link type="X5" extension="0.25" twist="1.57"/>
+```
 
 ### `<bracket>`
 
@@ -169,7 +173,9 @@ The robot element is the root element of a robot model.
 - `trans` (translation vector) specify the translation to the base frame of the model; defaults to (0,0,0)
 
 **Example**
-`<robot rot="1 0 0 0 1 0 0 0 1" trans="0 0 0"/>`
+```xml
+<robot rot="1 0 0 0 1 0 0 0 1" trans="0 0 0"/>
+```
 
 ### Connecting Robot Model Elements
 
@@ -177,7 +183,7 @@ For the descriptions below, assume `<elem[0-9]*/>` is any of actuator, link, bra
 
 The `robot` element can only contain `<elem>` subelements.  It contains an implicitly ordered list of them, with no minimum count:
 
-```
+```xml
 <robot>
   <elem>
 </robot>
@@ -185,7 +191,7 @@ The `robot` element can only contain `<elem>` subelements.  It contains an impli
 
 When there is a list of `<elem>` elements, they are assumed to following each other in a kinematic chain - here, elem2 is more distal than elem1:
 
-```
+```xml
 <robot>
   <elem1>
   <elem2>
