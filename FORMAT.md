@@ -26,7 +26,7 @@ Implementation note: When parsing strings that are "enum" values (e.g., the "typ
 
 ### floating point formula
 
-Attributes which define a floating point formula value support numeric values and simple formula elements. Basically, these support parenthesis, plus, minus, multiply, and divide operators, as well as the constant pi.
+Attributes which define a floating point formula value support numeric values and simple formula elements. Basically, these support parenthesis (`()`), plus (`+`), minus (`-`), multiply (`*`), and divide (`/`) operators, as well as the constant pi (case sensitive).
 
 ### rotation matrix
 
@@ -47,7 +47,7 @@ Rz(pi/2)
 These rotations can be compounded by multiplying terms.
 
 ```
-Rx(pi/2)*Rz(pi/4)*Ry(pi/2)
+Rx(pi/2)*Rz(-pi/4)*Ry(pi/2)
 ```
 
 ### translation vector
