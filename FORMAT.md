@@ -24,56 +24,31 @@ Enum types are lists of possible values that a certain attribute can have.
 
 Implementation note: When parsing strings that are "enum" values (e.g., the "type" attribute of an actuator or link element), implementations should support reading these values in without regard to case (e.g., a value of "X5-1" or "x5-1" should both be interpreted correctly).  In the case of non-matching case, a warning should be provided by the API when importing the file.  If implementations support writing HRDF files, the case shown in this document should be written.
 
-### floating point
-
-Attributes which define a floating point value support basic parsing using the following regex:
-
-`[-+]?\d+(\.\d+)?([eE][+-]?\d+)?`
-
-Essentially, this is a number in a format such as 3.325e-2 (where the scientific notation "e-2" extension is optional).
-
 ### floating point formula
 
-Attributes which define a floating point formula value support a grammar to parse numerical values and simple formula elements.  Basically, these support parenthesis, plus, minus, multiply, and divide operators, as well as the constant "pi".  Using "UNSIGNED_FLOAT" as equivalent to the floating point attribute definition above, but restricted to no sign before the number, the basic grammar for the "expression" is:
-
-```
-expression
-    : term
-    | expression '+' term
-    | expression '-' term
-    ;
-
-term
-    : factor
-    | term '*' factor
-    | term '/' factor
-    ;
-
-factor
-    : UNSIGNED_FLOAT
-    | "pi"
-    | '-' factor
-    | '(' expression ')'
-    ;
-```
+Attributes which define a floating point formula value support numeric values and simple formula elements. Basically, these support parenthesis, plus, minus, multiply, and divide operators, as well as the constant pi.
 
 ### rotation matrix
 
-Attributes which define a rotation matrix support either a row-major, whitespace delineated list of the 9 elements in a 3x3 rotation matrix, or a grammar to parse combinations of axis-aligned rotations.  For the 9 element list, each element supports the basic "floating point" attribute parsing described above. For the combinations of axis-aligned rotations, the grammar is defined as follows:
+Attributes which define a rotation matrix support either a row-major, whitespace delineated list of the 9 elements in a 3x3 rotation matrix, or a combination of axis-aligned rotations.
+
+For the 9 element list, each element supports the basic "floating point" attribute parsing described above.
 
 ```
-rotation_expression
-    : rotation_term
-    | rotation_expression '*' rotation_term
-    ;
-
-term
-   : "Rx(" expression ')'
-   | "Ry(" expression ')'
-   | "Rz(" expression ')'
+1 0 0 0 1 0 0 0 1
 ```
 
-The `expression` token in the above grammar is the same one defined by the floating point formula grammar.
+For the combinations of axis-aligned rotations, the functions `Rx`, `Ry` and `Rz` are used to perform axis about rotations.
+
+```
+Rz(pi/2)
+```
+
+These rotations can be compounded by multiplying terms.
+
+```
+Rx(pi/2)*Rz(pi/4)*Ry(pi/2)
+```
 
 ### translation vector
 
