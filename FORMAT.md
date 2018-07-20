@@ -26,54 +26,91 @@ Implementation note: When parsing strings that are "enum" values (e.g., the "typ
 
 ### floating point
 
-Attributes which define a floating point value support basic parsing using the following regex:
+A _floating point_ value is written as basic scientific notation.  Valid _floating point_ values include:
 
-`[-+]?\d+(\.\d+)?([eE][+-]?\d+)?`
+- `3.24`
+- `0.324`
+- `.324`
+- `324`
+- `3.24e2`
+- `-3.24E-2`
+- `-3.24e+2`
+- `-32E4`
 
-Essentially, this is a number in a format such as 3.325e-2 (where the scientific notation "e-2" extension is optional).
+Invalid _floating point_ values include:
+
+- `2.4.3`
+- `2,000`
+- `32,45`
+- `3e2.4`
+- `1.`
+- `.`
+- `- 1.3`
+- `1. 02`
+
+(A full railroad syntax diagram is available in the [Grammar](GRAMMAR.md) page)
 
 ### floating point formula
 
-Attributes which define a floating point formula value support a grammar to parse numerical values and simple formula elements.  Basically, these support parenthesis, plus, minus, multiply, and divide operators, as well as the constant "pi".  Using "UNSIGNED_FLOAT" as equivalent to the floating point attribute definition above, but restricted to no sign before the number, the basic grammar for the "expression" is:
+The _floating point formula_ type supports numeric values and simple formula elements. Basically, these support expressions using the _floating point_ type above, the constant pi (case sensitive), and allowing parenthesis (`()`), plus (`+`), minus (`-`), multiply (`*`), and divide (`/`) operators.  Whitespace is ignored (outside of the _floating point_ values)
 
-```
-expression
-    : term
-    | expression '+' term
-    | expression '-' term
-    ;
+Valid _floating point formula_ values include:
 
-term
-    : factor
-    | term '*' factor
-    | term '/' factor
-    ;
+- `pi / 4`
+- `1 + 4`
+- `32*45`
+- `1 + 2 / 3 - 4 * 5`
+- `1 + 2 / (3 - 4) * 5`
+- `(100 + 45) / (3*pi)`
+- `32e-2*pi`
 
-factor
-    : UNSIGNED_FLOAT
-    | "pi"
-    | '-' factor
-    | '(' expression ')'
-    ;
-```
+Invalid values include:
+
+- `2 pi`
+- `PI`
+
+(A full formal grammar is available in the [Grammar](GRAMMAR.md) page)
 
 ### rotation matrix
 
-Attributes which define a rotation matrix support either a row-major, whitespace delineated list of the 9 elements in a 3x3 rotation matrix, or a grammar to parse combinations of axis-aligned rotations.  For the 9 element list, each element supports the basic "floating point" attribute parsing described above. For the combinations of axis-aligned rotations, the grammar is defined as follows:
+Attributes which define a rotation matrix support either a row-major, whitespace delineated list of the 9 elements in a 3x3 rotation matrix, or a combination of axis-aligned rotations.
+
+For the 9 element list, each element supports the basic _floating point_ attribute parsing described above.  For example,
+
 
 ```
-rotation_expression
-    : rotation_term
-    | rotation_expression '*' rotation_term
-    ;
-
-term
-   : "Rx(" expression ')'
-   | "Ry(" expression ')'
-   | "Rz(" expression ')'
+1 0 0
+0 1 0
+0 0 1
 ```
 
-The `expression` token in the above grammar is the same one defined by the floating point formula grammar.
+or
+
+```
+1 0 0 0 1 0 0 0 1
+```
+
+would both be valid representations of an identity matrix.
+
+For the combinations of axis-aligned rotations, the functions `Rx`, `Ry` and `Rz` are used to perform axis about rotations; their arguments can be any valid _floating point expression_ value:
+
+```
+Rz(pi/2)
+```
+
+or 
+
+```
+Rz(3 * pi/4 + 0.1)
+```
+
+These rotations can also be compounded by multiplying terms.
+
+```
+Rx(pi/2)*Rz(-pi/4)*Ry(pi/2)
+```
+
+(A full formal grammar is available in the [Grammar](GRAMMAR.md) page)
 
 ### translation vector
 
@@ -100,7 +137,9 @@ The actuator element represents actuators such as the X5-4.  It is assumed to ha
 
 **Example:**
 
-`<actuator type="X5-9"/>`
+```xml
+<actuator type="X5-9"/>
+```
 
 ### `<link>`
 
@@ -113,7 +152,9 @@ The link element refers to a parameterized rigid body with two parameters (exten
 
 **Example:**
 
-`<link type="X5" extension="0.25" twist="1.57"/>`
+```xml
+<link type="X5" extension="0.25" twist="1.57"/>
+```
 
 ### `<bracket>`
 
@@ -194,7 +235,9 @@ The robot element is the root element of a robot model.
 - `trans` (translation vector) specify the translation to the base frame of the model; defaults to (0,0,0)
 
 **Example**
-`<robot rot="1 0 0 0 1 0 0 0 1" trans="0 0 0"/>`
+```xml
+<robot rot="1 0 0 0 1 0 0 0 1" trans="0 0 0"/>
+```
 
 ### Connecting Robot Model Elements
 
@@ -202,7 +245,7 @@ For the descriptions below, assume `<elem[0-9]*/>` is any of actuator, link, bra
 
 The `robot` element can only contain `<elem>` subelements.  It contains an implicitly ordered list of them, with no minimum count:
 
-```
+```xml
 <robot>
   <elem>
 </robot>
@@ -210,7 +253,7 @@ The `robot` element can only contain `<elem>` subelements.  It contains an impli
 
 When there is a list of `<elem>` elements, they are assumed to following each other in a kinematic chain - here, elem2 is more distal than elem1:
 
-```
+```xml
 <robot>
   <elem1>
   <elem2>
