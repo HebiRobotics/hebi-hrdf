@@ -4,6 +4,8 @@ Floating point values are defined by the following syntax diagram:
 
 ![Floating Point Grammar](grammar/floating_point_railroad.png)
 
+Note that this is the exact same definition used in C, C++, and Java.
+
 This corresponds to `decimalFloatingConstant` in the ANTLR grammar below.
 
 ```
