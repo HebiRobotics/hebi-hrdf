@@ -79,7 +79,7 @@ The link element refers to a parameterized rigid body with two parameters (exten
 **Example:**
 
 ```xml
-<link type="X5" extension="0.25" twist="1.57"/>
+<link type="X5" extension="0.25" twist="pi/2"/>
 ```
 
 ### `<bracket>`
@@ -108,7 +108,13 @@ The rigid body refers to a solid body with mass and one output.
 - `output_rot` (rotation matrix): the orientation of the output frame.  Defaults to identity.
 - `output_trans` (translation vector, m): The position the output frame.  Defaults to (0,0,0).
 
-- `ixx`, `iyy`, `izz`, `ixy`, `ixz`, `iyz` (floating point formulae, kg m^2) The 6 elements of the inertia tensor, relative to the COM frame as given above.  Each defaults to 0 (note, this means to overall default is a point mass).
+- `ixx`, `iyy`, `izz`, `ixy`, `ixz`, `iyz` (floating point formulae, kg m^2) The 6 elements of the inertia tensor, relative to the COM frame as given above.  Each defaults to 0 (note, this means overall default is a point mass).
+
+**Example:**
+
+```xml
+<rigid-body mass="0.5" com_trans="0.25 0 0" output_rot="Rx(pi/4)" output_trans="0.5 0 0"/>
+```
 
 ### `<joint>`
 
@@ -122,6 +128,12 @@ The joint refers to a massless degree of freedom.
   - tx
   - ty
   - tz
+
+**Example:**
+
+```xml
+<joint axis="rx"/>
+```
 
 ### Offsetting and overwriting dynamic properties
 
@@ -147,6 +159,11 @@ The optional override attributes completely override the library values.  These 
 
 Note: the HRDF file is ill-formed and should generate a parsing error if both `mass` and `mass_offset` attributes are defined, and similarly should fail if both `com_trans` and `com_trans_offset` elements are defined.
 
+**Example:**
+
+```xml
+<actuator type="X5-9" mass_offset="0.2"/>
+```
 
 ### Connecting Robot Model Elements
 
