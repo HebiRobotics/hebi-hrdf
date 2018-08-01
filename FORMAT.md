@@ -22,9 +22,29 @@ The attributes supported by the elements are of several basic types, described i
 * [rotation matrix](#rotation-matrix) values, either in `Rx/Ry/Rz` shorthand or all entries of the matrix
 * [translation vector](#translation-vector) values, containing x/y/z position
 
+## Root element: `<robot>` 
+
+The robot element is the root element of a robot model.
+
+**Required Attributes for v > 1.0.0**
+- `version` (enum) Specifies the version number of the HRDF format used to define this file.  To allow parsing of v1.0.0 files, this defaults to `1.0.0` if not given.  The rules used to parse the file are defined by the given version.  For example, a `mass_offset` attribute on an actuator may cause a parsing error if this attribute is not given, or is set to `1.0.0`. Supported values are:
+  - 1.0.0
+  - 1.1.0
+
+**Optional Attributes**
+- `rot` (rotation matrix) specify the rotation of the base frame of the model; defaults to identity matrix.
+- `trans` (translation vector) specify the translation to the base frame of the model; defaults to (0,0,0)
+
+**Example**
+```xml
+<robot rot="1 0 0 0 1 0 0 0 1" trans="0 0 0"/>
+```
+
+The `robot` element can only contain [`robot element`](robot-elements) subelements, which are described below.
+
 ## Robot Elements
 
-Each "robot element" has an assumed input interface, and one output interface. It may or may not have mass and inertia, depending on its type.
+Each "robot element" element has an assumed input interface, and one output interface. It may or may not have mass and inertia, depending on its type.
 
 Note that the parsing of the element name (e.g., `actuator`) is case sensitive, and so `Actuator` will generate and error.
 
@@ -127,23 +147,6 @@ The optional override attributes completely override the library values.  These 
 
 Note: the HRDF file is ill-formed and should generate a parsing error if both `mass` and `mass_offset` attributes are defined, and similarly should fail if both `com_trans` and `com_trans_offset` elements are defined.
 
-## `<robot>` 
-
-The robot element is the root element of a robot model.
-
-**Required Attributes for v > 1.0.0**
-- `version` (enum) Specifies the version number of the HRDF format used to define this file.  To allow parsing of v1.0.0 files, this defaults to `1.0.0` if not given.  The rules used to parse the file are defined by the given version.  For example, a `mass_offset` attribute on an actuator may cause a parsing error if this attribute is not given, or is set to `1.0.0`. Supported values are:
-  - 1.0.0
-  - 1.1.0
-
-**Optional Attributes**
-- `rot` (rotation matrix) specify the rotation of the base frame of the model; defaults to identity matrix.
-- `trans` (translation vector) specify the translation to the base frame of the model; defaults to (0,0,0)
-
-**Example**
-```xml
-<robot rot="1 0 0 0 1 0 0 0 1" trans="0 0 0"/>
-```
 
 ### Connecting Robot Model Elements
 
