@@ -14,107 +14,13 @@ The version numbering follows semantic versioning practices. Major version chang
 
 When the term _whitespace_ is used in this document, it will refer to the ASCII space, tab, carriage return, and new line characters (values in the string " \t\r\n").
 
-## Types
+The attributes supported by the elements are of several basic types, described in more detail at the bottom of this document.
 
-The attributes supported by the elements are of several basic types.
-
-### enums
-
-Enum types are lists of possible values that a certain attribute can have.
-
-Implementation note: When parsing strings that are "enum" values (e.g., the "type" attribute of an actuator or link element), implementations should support reading these values in without regard to case (e.g., a value of "X5-1" or "x5-1" should both be interpreted correctly).  In the case of non-matching case, a warning should be provided by the API when importing the file.  If implementations support writing HRDF files, the case shown in this document should be written.
-
-### floating point
-
-A _floating point_ value is written as basic scientific notation.  Valid _floating point_ values include:
-
-- `3.24`
-- `0.324`
-- `.324`
-- `324`
-- `3.24e2`
-- `-3.24E-2`
-- `-3.24e+2`
-- `-32E4`
-
-Invalid _floating point_ values include:
-
-- `2.4.3`
-- `2,000`
-- `32,45`
-- `3e2.4`
-- `1.`
-- `.`
-- `- 1.3`
-- `1. 02`
-
-(A full railroad syntax diagram is available in the [Grammar](GRAMMAR.md) page)
-
-### floating point formula
-
-The _floating point formula_ type supports numeric values and simple formula elements. Basically, these support expressions using the _floating point_ type above, the constant pi (case sensitive), and allowing parenthesis (`()`), plus (`+`), minus (`-`), multiply (`*`), and divide (`/`) operators.  Whitespace is ignored (outside of the _floating point_ values)
-
-Valid _floating point formula_ values include:
-
-- `pi / 4`
-- `1 + 4`
-- `32*45`
-- `1 + 2 / 3 - 4 * 5`
-- `1 + 2 / (3 - 4) * 5`
-- `(100 + 45) / (3*pi)`
-- `32e-2*pi`
-
-Invalid values include:
-
-- `2 pi`
-- `PI`
-
-(A full formal grammar is available in the [Grammar](GRAMMAR.md) page)
-
-### rotation matrix
-
-Attributes which define a rotation matrix support either a row-major, whitespace delineated list of the 9 elements in a 3x3 rotation matrix, or a combination of axis-aligned rotations.
-
-For the 9 element list, each element supports the basic _floating point_ attribute parsing described above.  For example,
-
-
-```
-1 0 0
-0 1 0
-0 0 1
-```
-
-or
-
-```
-1 0 0 0 1 0 0 0 1
-```
-
-would both be valid representations of an identity matrix.
-
-For the combinations of axis-aligned rotations, the functions `Rx`, `Ry` and `Rz` are used to perform axis about rotations; their arguments can be any valid _floating point expression_ value:
-
-```
-Rz(pi/2)
-```
-
-or 
-
-```
-Rz(3 * pi/4 + 0.1)
-```
-
-These rotations can also be compounded by multiplying terms.
-
-```
-Rx(pi/2)*Rz(-pi/4)*Ry(pi/2)
-```
-
-(A full formal grammar is available in the [Grammar](GRAMMAR.md) page)
-
-### translation vector
-
-Attributes which define a translation vector support a whitespace delineated list of the 3 elements of a cartesian (x,y,z) vector.
+* [enums](#enums) (possible string values for an attribute)
+* Basic [floating point](#floating-point) numbers
+* [floating point formulas](#floating-point-formula) combining numbers, ()+-/* operators, and the constant `pi`
+* [rotation matrix](#rotation-matrix) values, either in `Rx/Ry/Rz` shorthand or all entries of the matrix
+* [translation vector](#translation-vector) values, containing x/y/z position
 
 ## Robot Elements
 
@@ -259,3 +165,103 @@ When there is a list of `<elem>` elements, they are assumed to following each ot
   <elem2>
 </robot>
 ```
+
+## Types
+
+### enums
+
+Enum types are lists of possible values that a certain attribute can have.
+
+Implementation note: When parsing strings that are "enum" values (e.g., the "type" attribute of an actuator or link element), implementations should support reading these values in without regard to case (e.g., a value of "X5-1" or "x5-1" should both be interpreted correctly).  In the case of non-matching case, a warning should be provided by the API when importing the file.  If implementations support writing HRDF files, the case shown in this document should be written.
+
+### floating point
+
+A _floating point_ value is written as basic scientific notation.  Valid _floating point_ values include:
+
+- `3.24`
+- `0.324`
+- `.324`
+- `324`
+- `3.24e2`
+- `-3.24E-2`
+- `-3.24e+2`
+- `-32E4`
+
+Invalid _floating point_ values include:
+
+- `2.4.3`
+- `2,000`
+- `32,45`
+- `3e2.4`
+- `1.`
+- `.`
+- `- 1.3`
+- `1. 02`
+
+(A full railroad syntax diagram is available in the [Grammar](GRAMMAR.md) page)
+
+### floating point formula
+
+The _floating point formula_ type supports numeric values and simple formula elements. Basically, these support expressions using the _floating point_ type above, the constant pi (case sensitive), and allowing parenthesis (`()`), plus (`+`), minus (`-`), multiply (`*`), and divide (`/`) operators.  Whitespace is ignored (outside of the _floating point_ values)
+
+Valid _floating point formula_ values include:
+
+- `pi / 4`
+- `1 + 4`
+- `32*45`
+- `1 + 2 / 3 - 4 * 5`
+- `1 + 2 / (3 - 4) * 5`
+- `(100 + 45) / (3*pi)`
+- `32e-2*pi`
+
+Invalid values include:
+
+- `2 pi`
+- `PI`
+
+(A full formal grammar is available in the [Grammar](GRAMMAR.md) page)
+
+### rotation matrix
+
+Attributes which define a rotation matrix support either a row-major, whitespace delineated list of the 9 elements in a 3x3 rotation matrix, or a combination of axis-aligned rotations.
+
+For the 9 element list, each element supports the basic _floating point_ attribute parsing described above.  For example,
+
+
+```
+1 0 0
+0 1 0
+0 0 1
+```
+
+or
+
+```
+1 0 0 0 1 0 0 0 1
+```
+
+would both be valid representations of an identity matrix.
+
+For the combinations of axis-aligned rotations, the functions `Rx`, `Ry` and `Rz` are used to perform axis about rotations; their arguments can be any valid _floating point expression_ value:
+
+```
+Rz(pi/2)
+```
+
+or 
+
+```
+Rz(3 * pi/4 + 0.1)
+```
+
+These rotations can also be compounded by multiplying terms.
+
+```
+Rx(pi/2)*Rz(-pi/4)*Ry(pi/2)
+```
+
+(A full formal grammar is available in the [Grammar](GRAMMAR.md) page)
+
+### translation vector
+
+Attributes which define a translation vector support a whitespace delineated list of the 3 elements of a cartesian (x,y,z) vector.
