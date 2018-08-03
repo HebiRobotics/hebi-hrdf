@@ -1,0 +1,132 @@
+################################
+# Examples from the online doc
+
+# Good
+pi / 4
+0.785
+# Good
+1 + 4
+5
+# Good
+32*45
+1440
+# Good
+1 + 2 / 3 - 4 * 5
+-18.333
+# Good
+1 + 2 / (3-4) * 5
+-9
+# Good
+1 + 2 / (3 - 4) * 5
+-9
+# Good
+1+2/(3 - 4)*5
+-9
+# Good
+(100 + 45) / (3*pi)
+15.385
+# Good
+32e-2*pi
+1.0053
+
+# Bad
+2 pi
+# Bad
+PI
+
+################################
+# Examples from online docs (floating point values, which should be a subset of
+# floating point expressions). Note that some 'bad' examples can't be used, as
+# they are invalid floating point numbers but valid expressions - e.g., "- 1.3".
+
+# Good
+3.24
+3.24
+# Good
+0.324
+0.324
+# Good
+.324
+.324
+# Good
+324
+324
+# Good
+3.24e2
+324
+# Good
+-3.24E-2
+-.0324
+# Good
+-3.24e+2
+-324
+# Good
+-32E4
+-320000
+# Good
+1.
+1
+
+
+# Bad
+2.4.3
+# Bad
+2,000
+# Bad
+32,45
+# Bad
+3e2.4
+# Bad
+.
+# Bad
+1. 02
+
+################################
+# Other examples
+
+# Good
+pi
+3.1416
+# Good
+1 + 2.0
+3
+# Good
+----1
+1
+# Good
+-1
+-1
+# Good
+-(-(-(-(-1))))
+-1
+# Good
+-(-(-1)-(-1))
+-2
+# Good
+1
+1
+# Good
+1 + 324.5 * (4 - pi)
+279.553
+# Good
+1 + 2 + 3
+6
+# Good
+pi / 2
+1.57
+# Good
+4/5
+0.8
+
+# Bad
+2 4
+# Bad
+1 2 3 . 4 5
+# Bad
+PI2
+# Bad
+PI_2
+# Bad
+2PI
+# Bad
+M_PI
