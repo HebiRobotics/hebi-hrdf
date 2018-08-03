@@ -1,4 +1,4 @@
-= Overview
+# Overview
 
 This directory provides tests that ensure the grammar accurately describes the
 allowable input, as well as provides test cases that can be used by various
@@ -8,20 +8,20 @@ Note -- the instructions below and build scripts assume linux; for Windows -
 you're on your own for now (please fix and add documentation here if you work
 on this!)
 
-= Setup
+# Setup
 
 To install the ANTLR 4 dependency, run (from this directory)
 `curl -O http://www.antlr.org/download/antlr-4.7.1-complete.jar`
 
-= Build
+# Build
 
 Run `build.sh`
 
-= Run
+# Run
 
 Run `run_tests.sh`
 
-= Tests
+# Tests
 
 Adding tests can be done by adding to one of the existing ".testcases" files, or
 by creating a new one.  For a new file, be sure you add it to the "run_tests.sh"
