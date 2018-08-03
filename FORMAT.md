@@ -206,6 +206,7 @@ A _floating point_ value is written as basic scientific notation.  Valid _floati
 - `-3.24E-2`
 - `-3.24e+2`
 - `-32E4`
+- `1.`
 
 Invalid _floating point_ values include:
 
@@ -213,7 +214,6 @@ Invalid _floating point_ values include:
 - `2,000`
 - `32,45`
 - `3e2.4`
-- `1.`
 - `.`
 - `- 1.3`
 - `1. 02`
