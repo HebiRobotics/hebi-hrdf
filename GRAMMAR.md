@@ -19,7 +19,7 @@ DecimalFloatingConstant
 
   : FractionalConstant ExponentPart?
 
-  | DigitSequence ExponentPart;
+  | DigitSequence ExponentPart?;
 
 DigitSequence
 
