@@ -59,7 +59,7 @@ public class GrammarTestRunner {
       if (debug)
         System.out.println("Parsed without exception");
       return true;
-    } catch (ParseCancellationException ex) { //RecognitionException | NullPointerException | StringIndexOutOfBoundsException | RasterFormatException ex) {
+    } catch (ParseCancellationException ex) {
       if (debug)
         System.out.println("Caught exception during parse");
       return false;
@@ -78,14 +78,14 @@ public class GrammarTestRunner {
     String line;
     while ((line = br.readLine()) != null) {
       // Process the line:
-      if (line.equals("# Good")) {
+      if (line.trim().equals("# Good")) {
         // Get the expression and check it
         line = br.readLine();
         testGood(line);
         // Skip/throw away correct result -- we're not computing the result
         // here, just parsing the expression
         line = br.readLine();
-      } else if (line.equals("# Bad")) {
+      } else if (line.trim().equals("# Bad")) {
         // Get the expression and check it
         line = br.readLine();
         testBad(line);
@@ -99,8 +99,7 @@ public class GrammarTestRunner {
     System.out.println("-- Checking floating point formula test cases for valid grammar. --");
     System.out.println("");
 
-    for (int i = 0; i < args.length; ++i)
-    {
+    for (int i = 0; i < args.length; ++i) {
  
       GrammarTestRunner runner = new GrammarTestRunner();
 

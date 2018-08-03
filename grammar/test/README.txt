@@ -10,8 +10,8 @@ on this!)
 
 = Setup
 
-To install the ANTLR 4 dependency, go to /usr/local/lib, and run
-`sudo curl -O http://www.antlr.org/download/antlr-4.7.1-complete.jar`
+To install the ANTLR 4 dependency, run (from this directory)
+`curl -O http://www.antlr.org/download/antlr-4.7.1-complete.jar`
 
 = Build
 
