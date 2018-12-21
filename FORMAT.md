@@ -83,7 +83,7 @@ The link element refers to a parameterized rigid body with two parameters (exten
 **Example:**
 
 ```xml
-<type="X5" extension="0.25" twist="pi/2"/>
+<link type="X5" extension="0.25" twist="pi/2"/>
 ```
 
 ### `<bracket>`
