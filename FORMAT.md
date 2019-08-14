@@ -6,7 +6,7 @@ Examples of this format in use can be seen in the kits in this directory.
 
 ## Version and versioning
 
-The following specification is version 1.1.0 of this format.
+The following specification is version 1.2.0 of this format.
 
 The version numbering follows semantic versioning practices. Major version changes (e.g., 1.x.x->2.x.x) imply non-backwards compatible changes, whereas minor version changes (e.g., 1.3.0->1.4.0) imply backwards compatibility: existing robot configuration files will work with the updated specification, although files specifically using the newer specification may not be supported by tools using an older version of the standard.  Revision changes (1.4.2 -> 1.4.3) imply only clarification of the documentation, and should be treated as compatible.  Each new version change of the specification will be associated with a tag/release in this repository.
 
@@ -30,6 +30,7 @@ The robot element is the root element of a robot model.
 - `version` (enum) Specifies the version number of the HRDF format used to define this file.  To allow parsing of v1.0.0 files, this defaults to `1.0.0` if not given.  The rules used to parse the file are defined by the given version.  For example, a `mass_offset` attribute on an actuator may cause a parsing error if this attribute is not given, or is set to `1.0.0`. Supported values are:
   - 1.0.0
   - 1.1.0
+  - 1.2.0
 
 **Optional Attributes**
 - `rot` (rotation matrix) specify the rotation of the base frame of the model; defaults to identity matrix.
@@ -135,6 +136,32 @@ The joint refers to a massless degree of freedom.
 <joint axis="rx"/>
 ```
 
+### `<end-effector>`
+
+An end effector refers to a component at the end of a kinematic chain (e.g., that has no children).  The key aspect of the end effector is that it identifies the location of an "end effector frame" at a specified relative position.
+
+(Note that HRDFs of version <= 1.1.0 do not explicitly have the notion of an end effector frame, so when being loaded into a compliant parser, the API adds an implicit "end effector frame" to the end of the chain of elements).
+
+By default, the end effector is massless with an identity transformation to the end effector frame from its input.
+
+**Required attributes:**
+
+(none)
+
+**Optional attributes:**
+- `mass` (floating point formula, kg) Defaults to 0.
+- `com_rot` (rotation matrix) the orientation of the center of mass (used for simplifying the inertia tensor description if desired).  Defaults to identity.
+- `com_trans` (translation vector, m) The position of the center of mass.  Defaults to (0,0,0).
+- `end_effector_rot` (rotation matrix): the orientation of the end effector frame relative to the end effector's input.  Defaults to identity.
+- `end_effector_trans` (translation vector, m): The position the end effector frame relative to the end effector's input.  Defaults to (0,0,0).
+- `ixx`, `iyy`, `izz`, `ixy`, `ixz`, `iyz` (floating point formulae, kg m^2) The 6 elements of the inertia tensor, relative to the COM frame as given above.  Each defaults to 0 (note, this means overall default is a point mass).
+
+**Example:**
+
+```xml
+<end-effector mass="0.1" com_trans="0 0 0.5" end_effector_trans="0 0 0.1"/>
+```
+
 ### Offsetting and overwriting dynamic properties
 
 The built in robot model elements (`actuator`, `link`, and `bracket`) all have attributes that allow modification or overwriting of certain properties.
@@ -185,6 +212,8 @@ When there is a list of `<elem>` elements, they are assumed to following each ot
   <elem2>
 </robot>
 ```
+
+Note that an end-effector element can only come last in the sequence of elements, as there are no outputs on an end effector that can support child elements.
 
 ## Types
 
