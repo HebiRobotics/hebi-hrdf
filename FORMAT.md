@@ -6,7 +6,7 @@ Examples of this format in use can be seen in the kits in this directory.
 
 ## Version and versioning
 
-The following specification is version 1.1.0 of this format.
+The following specification is version 1.2.0 of this format.
 
 The version numbering follows semantic versioning practices. Major version changes (e.g., 1.x.x->2.x.x) imply non-backwards compatible changes, whereas minor version changes (e.g., 1.3.0->1.4.0) imply backwards compatibility: existing robot configuration files will work with the updated specification, although files specifically using the newer specification may not be supported by tools using an older version of the standard.  Revision changes (1.4.2 -> 1.4.3) imply only clarification of the documentation, and should be treated as compatible.  Each new version change of the specification will be associated with a tag/release in this repository.
 
@@ -30,6 +30,7 @@ The robot element is the root element of a robot model.
 - `version` (enum) Specifies the version number of the HRDF format used to define this file.  To allow parsing of v1.0.0 files, this defaults to `1.0.0` if not given.  The rules used to parse the file are defined by the given version.  For example, a `mass_offset` attribute on an actuator may cause a parsing error if this attribute is not given, or is set to `1.0.0`. Supported values are:
   - 1.0.0
   - 1.1.0
+  - 1.2.0
 
 **Optional Attributes**
 - `rot` (rotation matrix) specify the rotation of the base frame of the model; defaults to identity matrix.
@@ -60,6 +61,9 @@ The actuator element represents actuators such as the X5-4.  It is assumed to ha
   - X8-3
   - X8-9
   - X8-16
+  - R8-3
+  - R8-9
+  - R8-16
 
 **Example:**
 
@@ -72,14 +76,45 @@ The actuator element represents actuators such as the X5-4.  It is assumed to ha
 The link element refers to a parameterized rigid body with two parameters (extension and twist).  All links have one output interface.
 
 **Required attributes:**
-- `type` (string/enum) the only currently supported value is X5
+- `type` (string/enum) Currently supported values:
+  - X5
+  - X5InlineInput
+  - X5InlineOutput
+  - X5InlineInputInlineOutput
+  - R8
+  - R8InlineInput
+  - R8InlineOutput
+  - R8InlineInputInlineOutput
 - `extension` (floating point formula, meters)
 - `twist` (floating point formula, radians)
 
 **Example:**
 
 ```xml
-<link type="X5" extension="0.25" twist="pi/2"/>
+<link type="X5" extension="0.325" twist="pi/2"/>
+```
+
+**Implementation/Usage Notes:**
+
+Note that the "extension" and "twist" values generally correspond to those shown on http://docs.hebi.us/hardware.html.  However, it is possible to attach an X5 link to an R8 actuator housing and vice versa.  In this case, there is a 2mm offset that occurs relative to the documented "extension" and "twist" values, because the housing hole patterns are 2mm off-center on the X-series actuators.
+
+When loading an HRDF file into the HEBI APIs, these offsets are added for you as necessary based on the components in the file.
+
+However, these offsets don't carry through when attaching other objects in between.  For example, the following two HRDF files would result in differing output positions.  In the first case, the center-to-center distance of the extension is 2mm longer than the second case, because of the housing bolt pattern compensation.  The rigid body is simply assumed to have a matching housing bolt pattern for the type of link that it is connected to.
+
+```xml
+<robot>
+  <link type="X5" extension="0.325" twist="0"/>
+  <actuator type="X8-3"/>
+</robot>
+```
+
+```xml
+<robot>
+  <link type="X5" extension="0.325" twist="0"/>
+  <rigid-body mass="0"/>
+  <actuator type="X8-3"/>
+</robot>
 ```
 
 ### `<bracket>`
