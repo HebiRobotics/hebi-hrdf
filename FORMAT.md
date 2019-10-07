@@ -96,7 +96,7 @@ The link element refers to a parameterized rigid body with two parameters (exten
 
 **Implementation/Usage Notes:**
 
-Note that the "extension" and "twist" values generally correspond to those shown on http://docs.hebi.us/hardware.html.  However, it is possible to attach an X5 link to an R8 actuator housing and vice versa.  In this case, there is a 2mm offset that occurs relative to the documented "extension" and "twist" values, because the housing hole patterns are 2mm off-center on the X-series actuators.
+Note that the "extension" and "twist" values generally correspond to those shown on http://docs.hebi.us/hardware.html.  However, it is possible to attach an X5 link to an R8 actuator housing and output.  In this case, there is a 2mm offset that occurs on the housing connection relative to the documented "extension" and "twist" values, because the housing hole patterns on X5 and X8 actuators are 2mm off-center, while housing holes pattern on the R8 actuators are centered.
 
 When loading an HRDF file into the HEBI APIs, these offsets are added for you as necessary based on the components in the file.
 
