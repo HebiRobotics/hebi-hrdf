@@ -104,16 +104,18 @@ However, these offsets don't carry through when attaching other objects in betwe
 
 ```xml
 <robot>
+  <actuator type="R8-3"/>
   <link type="X5" extension="0.325" twist="0"/>
-  <actuator type="X8-3"/>
+  <actuator type="R8-3"/>
 </robot>
 ```
 
 ```xml
 <robot>
+  <actuator type="R8-3"/>
   <link type="X5" extension="0.325" twist="0"/>
   <rigid-body mass="0"/>
-  <actuator type="X8-3"/>
+  <actuator type="R8-3"/>
 </robot>
 ```
 
