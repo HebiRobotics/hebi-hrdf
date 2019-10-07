@@ -152,7 +152,6 @@ The rigid body refers to a solid body with mass and one output.
 - `com_trans` (translation vector, m) The position of the center of mass.  Defaults to (0,0,0).
 - `output_rot` (rotation matrix): the orientation of the output frame.  Defaults to identity.
 - `output_trans` (translation vector, m): The position the output frame.  Defaults to (0,0,0).
-
 - `ixx`, `iyy`, `izz`, `ixy`, `ixz`, `iyz` (floating point formulae, kg m^2) The 6 elements of the inertia tensor, relative to the COM frame as given above.  Each defaults to 0 (note, this means overall default is a point mass).
 
 **Example:**
