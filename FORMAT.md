@@ -136,6 +136,10 @@ The bracket element refers to a rigid body that connects modules, such as a ligh
   - R8HeavyRightInside
   - R8HeavyRightOutside
 
+**Implementation/Usage Notes:**
+
+Note that as with the `Link` elements, it is possible to attach an `X5*` bracket to an `R8` actuator housing and output.  As in the case of the link, there is a 2mm offset that occurs on the housing connection compared to an `X5` bracket connected to an `X8` actuator because of the differing bolt pattern centers.  When loading an HRDF file into the HEBI APIs, these offsets are added for you as necessary based on the components in the file.
+
 ### `<rigid-body>`
 
 The rigid body refers to a solid body with mass and one output.
