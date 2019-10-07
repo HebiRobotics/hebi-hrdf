@@ -104,7 +104,6 @@ However, these offsets don't carry through when attaching other objects in betwe
 
 ```xml
 <robot>
-  <actuator type="R8-3"/>
   <link type="X5" extension="0.325" twist="0"/>
   <actuator type="R8-3"/>
 </robot>
@@ -112,7 +111,6 @@ However, these offsets don't carry through when attaching other objects in betwe
 
 ```xml
 <robot>
-  <actuator type="R8-3"/>
   <link type="X5" extension="0.325" twist="0"/>
   <rigid-body mass="0"/>
   <actuator type="R8-3"/>
@@ -131,6 +129,12 @@ The bracket element refers to a rigid body that connects modules, such as a ligh
   - X5HeavyLeftOutside
   - X5HeavyRightInside
   - X5HeavyRightOutside
+  - R8LightLeft
+  - R8LightRight
+  - R8HeavyLeftInside
+  - R8HeavyLeftOutside
+  - R8HeavyRightInside
+  - R8HeavyRightOutside
 
 ### `<rigid-body>`
 
