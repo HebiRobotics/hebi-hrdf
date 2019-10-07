@@ -142,7 +142,7 @@ An end effector refers to a component at the end of a kinematic chain (e.g., tha
 
 (Note that HRDFs of version <= 1.1.0 do not explicitly have the notion of an end effector frame, so when being loaded into a compliant parser, the API adds an implicit "end effector frame" to the end of the chain of elements).
 
-By default, the end effector is massless with an identity transformation to the end effector frame from its input.
+By default, the end effector is massless with an identity transformation to the end effector output frame from its input.
 
 **Required attributes:**
 
@@ -152,14 +152,14 @@ By default, the end effector is massless with an identity transformation to the 
 - `mass` (floating point formula, kg) Defaults to 0.
 - `com_rot` (rotation matrix) the orientation of the center of mass (used for simplifying the inertia tensor description if desired).  Defaults to identity.
 - `com_trans` (translation vector, m) The position of the center of mass.  Defaults to (0,0,0).
-- `end_effector_rot` (rotation matrix): the orientation of the end effector frame relative to the end effector's input.  Defaults to identity.
-- `end_effector_trans` (translation vector, m): The position the end effector frame relative to the end effector's input.  Defaults to (0,0,0).
+- `output_rot` (rotation matrix): the orientation of the end effector frame relative to the end effector's input.  Defaults to identity.
+- `output_trans` (translation vector, m): The position the end effector frame relative to the end effector's input.  Defaults to (0,0,0).
 - `ixx`, `iyy`, `izz`, `ixy`, `ixz`, `iyz` (floating point formulae, kg m^2) The 6 elements of the inertia tensor, relative to the COM frame as given above.  Each defaults to 0 (note, this means overall default is a point mass).
 
 **Example:**
 
 ```xml
-<end-effector mass="0.1" com_trans="0 0 0.5" end_effector_trans="0 0 0.1"/>
+<end-effector mass="0.1" com_trans="0 0 0.5" output_trans="0 0 0.1"/>
 ```
 
 ### Offsetting and overwriting dynamic properties
