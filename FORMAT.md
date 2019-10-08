@@ -258,6 +258,13 @@ When there is a list of `<elem>` elements, they are assumed to following each ot
 
 Note that an end-effector element can only come last in the sequence of elements, as there are no outputs on an end effector that can support child elements.
 
+Also, note that there are restrictions on valid children for each type of element as follows.  APIs should return an error for HRDF files which describe invalid configurations.
+
+- `rigid-body` and `joint`: supports any child
+- `end-effector`: can have no children
+- `bracket` or `link`: child can be any `rigid-body`, `joint`, or `end-effector`; can not be an `bracket` or `link`.  For `X5*` brackets/links, any actuator type can be a child; for `R8*` brackets, only `R8*` actuators can be added as a child.
+- `actuator`: child can be any `rigid-body`, `joint`, or `end-effector`; can not be an `actuator`.  For `R8*` actuators, any `bracket` or `link` type can be a child; for `X5*` actuators, only `X5*` `bracket` or `link` elements can be added as a child.
+
 ## Types
 
 ### enums
