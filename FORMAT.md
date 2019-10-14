@@ -6,7 +6,7 @@ Examples of this format in use can be seen in the kits in this directory.
 
 ## Version and versioning
 
-The following specification is version 1.1.0 of this format.
+The following specification is version 1.2.0 of this format.
 
 The version numbering follows semantic versioning practices. Major version changes (e.g., 1.x.x->2.x.x) imply non-backwards compatible changes, whereas minor version changes (e.g., 1.3.0->1.4.0) imply backwards compatibility: existing robot configuration files will work with the updated specification, although files specifically using the newer specification may not be supported by tools using an older version of the standard.  Revision changes (1.4.2 -> 1.4.3) imply only clarification of the documentation, and should be treated as compatible.  Each new version change of the specification will be associated with a tag/release in this repository.
 
@@ -30,10 +30,12 @@ The robot element is the root element of a robot model.
 - `version` (enum) Specifies the version number of the HRDF format used to define this file.  To allow parsing of v1.0.0 files, this defaults to `1.0.0` if not given.  The rules used to parse the file are defined by the given version.  For example, a `mass_offset` attribute on an actuator may cause a parsing error if this attribute is not given, or is set to `1.0.0`. Supported values are:
   - 1.0.0
   - 1.1.0
+  - 1.2.0
 
 **Optional Attributes**
 - `rot` (rotation matrix) specify the rotation of the base frame of the model; defaults to identity matrix.
 - `trans` (translation vector) specify the translation to the base frame of the model; defaults to (0,0,0)
+- `description` (string) human readable description of this robot
 
 **Example**
 ```xml
@@ -60,6 +62,9 @@ The actuator element represents actuators such as the X5-4.  It is assumed to ha
   - X8-3
   - X8-9
   - X8-16
+  - R8-3
+  - R8-9
+  - R8-16
 
 **Example:**
 
@@ -71,15 +76,25 @@ The actuator element represents actuators such as the X5-4.  It is assumed to ha
 
 The link element refers to a parameterized rigid body with two parameters (extension and twist).  All links have one output interface.
 
+Note that the "extension" and "twist" values generally correspond to those shown on http://docs.hebi.us/hardware.html.
+
 **Required attributes:**
-- `type` (string/enum) the only currently supported value is X5
+- `type` (string/enum) Currently supported values:
+  - X5
+  - X5InlineInput
+  - X5InlineOutput
+  - X5InlineInputInlineOutput
+  - R8
+  - R8InlineInput
+  - R8InlineOutput
+  - R8InlineInputInlineOutput
 - `extension` (floating point formula, meters)
 - `twist` (floating point formula, radians)
 
 **Example:**
 
 ```xml
-<link type="X5" extension="0.25" twist="pi/2"/>
+<link type="X5" extension="0.325" twist="pi/2"/>
 ```
 
 ### `<bracket>`
@@ -94,6 +109,12 @@ The bracket element refers to a rigid body that connects modules, such as a ligh
   - X5HeavyLeftOutside
   - X5HeavyRightInside
   - X5HeavyRightOutside
+  - R8LightLeft
+  - R8LightRight
+  - R8HeavyLeftInside
+  - R8HeavyLeftOutside
+  - R8HeavyRightInside
+  - R8HeavyRightOutside  
 
 ### `<rigid-body>`
 
@@ -107,7 +128,6 @@ The rigid body refers to a solid body with mass and one output.
 - `com_trans` (translation vector, m) The position of the center of mass.  Defaults to (0,0,0).
 - `output_rot` (rotation matrix): the orientation of the output frame.  Defaults to identity.
 - `output_trans` (translation vector, m): The position the output frame.  Defaults to (0,0,0).
-
 - `ixx`, `iyy`, `izz`, `ixy`, `ixz`, `iyz` (floating point formulae, kg m^2) The 6 elements of the inertia tensor, relative to the COM frame as given above.  Each defaults to 0 (note, this means overall default is a point mass).
 
 **Example:**
@@ -135,9 +155,31 @@ The joint refers to a massless degree of freedom.
 <joint axis="rx"/>
 ```
 
+### `<end-effector>`
+
+An end effector refers to a component at the end of a kinematic chain (e.g., that has no children).  The key aspect of the end effector is that it identifies the location of an "end effector frame" at a specified relative position.
+
+(Note that HRDFs of version <= 1.1.0 do not explicitly have the notion of an end effector frame, so when being loaded into a compliant parser, the API adds an implicit "end effector frame" to the end of the chain of elements).
+
+**Required attributes:**
+
+- `type` (string/enum) Currently supported values:
+  - custom (fully specifiable by the user)
+  - parallel (matches the parallel jaw gripper attachment to a HEBI gripper)
+
+**Example:**
+
+```xml
+<end-effector type="custom" mass="0.1" com_trans="0 0 0.5" output_trans="0 0 0.1"/>
+```
+
+**Implementation Notes:**
+
+As with other built-in element types, the `end-effector` has mass, center of mass, interia, and output frame information.  The default values for the optional attributes depend on the type of the end effector.  For the `custom` type, these values match a `rigid-body` of mass 0.
+
 ### Offsetting and overwriting dynamic properties
 
-The built in robot model elements (`actuator`, `link`, and `bracket`) all have attributes that allow modification or overwriting of certain properties.
+The built in robot model elements (`actuator`, `link`, `bracket`, and `end-effector`) all have attributes that allow modification or overwriting of certain properties.
 
 **Offset**
 The optional offset attributes set a constant offset from the library values (e.g., to account for an additional weight on a module).
@@ -167,7 +209,7 @@ Note: the HRDF file is ill-formed and should generate a parsing error if both `m
 
 ### Connecting Robot Model Elements
 
-For the descriptions below, assume `<elem[0-9]*/>` is any of actuator, link, bracket, rigid-body, and joint, with all parameters defined as necessary.
+For the descriptions below, assume `<elem[0-9]*/>` is any of actuator, link, bracket, end-effector, rigid-body, and joint, with all parameters defined as necessary.
 
 The `robot` element can only contain `<elem>` subelements.  It contains an implicitly ordered list of them, with no minimum count:
 
@@ -185,6 +227,40 @@ When there is a list of `<elem>` elements, they are assumed to following each ot
   <elem2>
 </robot>
 ```
+
+**Interface types:**
+
+Each robot model element has an input interface and an output interface, each of a specific type and polarity. Following is a list of interface types; each listed type has two polarities, `A` and `B`.  
+
+- `X-AH` X Actuator Housing Interface
+- `R-AH` R Actuator Housing Interface
+- `XR-AO` X/R Actuator Output Interface
+
+Compatible interfaces are defined as having the same type and different polarity.  Adjacent elements must have compatible interfaces for the HRDF file to be valid.  In other words, in the following file, the output interface of `elem1` must be the same type but different polarity as that of the input interface of `elem2`.
+
+```xml
+<robot>
+  <elem1>
+  <elem2>
+</robot>
+```
+
+As a special case, `rigid-body` and `joint` elements are assumed to have interface types that are compatible with anything.
+
+A full list of element interface types is given below. An asterisk (`*`) in the type is used as a wildcard to indicate any matching element types:
+
+| Element | Type | Input Interface | Output Interface |
+| ------- | ---- | --------------- | ---------------- |
+| `actuator` | `X*` | `X-AH-A` | `XR-AO-A` |
+| `actuator` | `R*` | `R-AH-A` | `XR-AO-A` |
+| `bracket` | `X*` | `XR-AO-B` | `X-AH-B` |
+| `bracket` | `R*` | `XR-AO-B` | `R-AH-B` |
+| `link` | `X*` | `XR-AO-B` | `X-AH-B` |
+| `link` | `R*` | `XR-AO-B` | `R-AH-B` |
+| `end-effector` | `custom` | any | none |
+| `end-effector` | `parallel` | `XR-AO-B` | none |
+| `rigid-body` | n/a | any | any |
+| `joint` | n/a | any | any |
 
 ## Types
 
