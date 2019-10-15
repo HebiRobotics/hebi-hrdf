@@ -26,18 +26,18 @@ The attributes supported by the elements are of several basic types, described i
 
 The robot element is the root element of a robot model.
 
-**Required Attributes for v > 1.0.0**
+**Required Attributes for v > 1.0.0:**
 - `version` (enum) Specifies the version number of the HRDF format used to define this file.  To allow parsing of v1.0.0 files, this defaults to `1.0.0` if not given.  The rules used to parse the file are defined by the given version.  For example, a `mass_offset` attribute on an actuator may cause a parsing error if this attribute is not given, or is set to `1.0.0`. Supported values are:
   - 1.0.0
   - 1.1.0
   - 1.2.0
 
-**Optional Attributes**
+**Optional Attributes:**
 - `rot` (rotation matrix) specify the rotation of the base frame of the model; defaults to identity matrix.
 - `trans` (translation vector) specify the translation to the base frame of the model; defaults to (0,0,0)
 - `description` (string) human readable description of this robot
 
-**Example**
+**Example:**
 ```xml
 <robot rot="1 0 0 0 1 0 0 0 1" trans="0 0 0"/>
 ```
@@ -76,7 +76,7 @@ The actuator element represents actuators such as the X5-4.  It is assumed to ha
 
 The link element refers to a parameterized rigid body with two parameters (extension and twist).  All links have one output interface.
 
-Note that the "extension" and "twist" values generally correspond to those shown on http://docs.hebi.us/hardware.html.
+Note that the "extension" and "twist" values correspond to those shown on http://docs.hebi.us/hardware.html.
 
 **Required attributes:**
 - `type` (string/enum) Currently supported values:
@@ -161,9 +161,9 @@ An end effector refers to a component at the end of a kinematic chain (e.g., tha
 
 (Note that HRDFs of version <= 1.1.0 do not explicitly have the notion of an end effector frame, so when being loaded into a compliant parser, the API adds an implicit "end effector frame" to the end of the chain of elements).
 
-**Required attributes:**
+**Optional attributes:**
 
-- `type` (string/enum) Currently supported values:
+- `type` (string/enum) The style of end effector.  Defaults to `custom`. Currently supported values:
   - custom (fully specifiable by the user)
   - parallel (matches the parallel jaw gripper attachment to a HEBI gripper)
 
@@ -173,7 +173,7 @@ An end effector refers to a component at the end of a kinematic chain (e.g., tha
 <end-effector type="custom" mass="0.1" com_trans="0 0 0.5" output_trans="0 0 0.1"/>
 ```
 
-**Implementation Notes:**
+**Implementation notes:**
 
 As with other built-in element types, the `end-effector` has mass, center of mass, interia, and output frame information.  The default values for the optional attributes depend on the type of the end effector.  For the `custom` type, these values match a `rigid-body` of mass 0.
 
