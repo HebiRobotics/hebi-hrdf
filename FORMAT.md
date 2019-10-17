@@ -79,7 +79,7 @@ The link element refers to a parameterized rigid body.  All links have one outpu
 Note that the "extension" and "twist" values correspond to those shown on http://docs.hebi.us/hardware.html.
 
 **Required attributes:**
-- `type` (string/enum) The style of end effector.  Defaults to `custom`. Currently supported values::
+- `type` (string/enum) The style of link.  Currently supported values::
   - X5
   - R8
   
