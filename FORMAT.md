@@ -74,20 +74,22 @@ The actuator element represents actuators such as the X5-4.  It is assumed to ha
 
 ### `<link>`
 
-The link element refers to a parameterized rigid body with two parameters (extension and twist).  All links have one output interface.
+The link element refers to a parameterized rigid body.  All links have one output interface.
 
 Note that the "extension" and "twist" values correspond to those shown on http://docs.hebi.us/hardware.html.
 
 **Required attributes:**
-- `type` (string/enum) Currently supported values:
+- `type` (string/enum) The style of link.  Currently supported values::
   - X5
-  - X5InlineInput
-  - X5InlineOutput
-  - X5InlineInputInlineOutput
   - R8
-  - R8InlineInput
-  - R8InlineOutput
-  - R8InlineInputInlineOutput
+  
+**Optional attributes:**  
+- `input` (string/enum) The type of the input interface.  Defaults to `RightAngle`. Currently supported values:
+  - RightAngle (supported for both X5 and R8 link types)
+  - Inline (supported for both X5 and R8 link types)
+- `output` (string/enum) The type of the output interface.  Defaults to `RightAngle`. Currently supported values:
+  - RightAngle (supported for both X5 and R8 link types)
+  - Inline (supported for both X5 and R8 link types)
 - `extension` (floating point formula, meters)
 - `twist` (floating point formula, radians)
 
