@@ -82,7 +82,9 @@ Note that the "extension" and "twist" values correspond to those shown on http:/
 - `type` (string/enum) The style of link.  Currently supported values::
   - X5
   - R8
-  
+- `extension` (floating point formula, meters)
+- `twist` (floating point formula, radians)
+
 **Optional attributes:**  
 - `input` (string/enum) The type of the input interface.  Defaults to `RightAngle`. Currently supported values:
   - RightAngle (supported for both X5 and R8 link types)
@@ -90,8 +92,6 @@ Note that the "extension" and "twist" values correspond to those shown on http:/
 - `output` (string/enum) The type of the output interface.  Defaults to `RightAngle`. Currently supported values:
   - RightAngle (supported for both X5 and R8 link types)
   - Inline (supported for both X5 and R8 link types)
-- `extension` (floating point formula, meters)
-- `twist` (floating point formula, radians)
 
 **Example:**
 
