@@ -165,19 +165,20 @@ An end effector refers to a component at the end of a kinematic chain (e.g., tha
 
 **Optional attributes:**
 
-- `type` (string/enum) The style of end effector.  Defaults to `custom`. Currently supported values:
-  - custom (fully specifiable by the user)
-  - parallel (matches the parallel jaw gripper attachment to a HEBI gripper)
+- `type` (string/enum) The style of end effector.  Defaults to `Custom`. Currently supported values:
+  - Custom (fully specifiable by the user)
+  - X5Parallel (matches the parallel jaw gripper attachment to a HEBI gripper)
+  - R8Parallel (matches the parallel jaw gripper attachment to a HEBI gripper)
 
 **Example:**
 
 ```xml
-<end-effector type="custom" mass="0.1" com_trans="0 0 0.5" output_trans="0 0 0.1"/>
+<end-effector type="Custom" mass="0.1" com_trans="0 0 0.5" output_trans="0 0 0.1"/>
 ```
 
 **Implementation notes:**
 
-As with other built-in element types, the `end-effector` has mass, center of mass, interia, and output frame information.  The default values for the optional attributes depend on the type of the end effector.  For the `custom` type, these values match a `rigid-body` of mass 0.
+As with other built-in element types, the `end-effector` has mass, center of mass, interia, and output frame information.  The default values for the optional attributes depend on the type of the end effector.  For the `Custom` type, these values match a `rigid-body` of mass 0.
 
 ### Offsetting and overwriting dynamic properties
 
@@ -236,7 +237,8 @@ Each robot model element has an input interface and an output interface, each of
 
 - `X-AH` X Actuator Housing Interface
 - `R-AH` R Actuator Housing Interface
-- `XR-AO` X/R Actuator Output Interface
+- `X-AO` X Actuator Output Interface
+- `R-AO` R Actuator Output Interface
 
 Compatible interfaces are defined as having the same type and different polarity.  Adjacent elements must have compatible interfaces for the HRDF file to be valid.  In other words, in the following file, the output interface of `elem1` must be the same type but different polarity as that of the input interface of `elem2`.
 
@@ -253,14 +255,15 @@ A full list of element interface types is given below. An asterisk (`*`) in the 
 
 | Element | Type | Input Interface | Output Interface |
 | ------- | ---- | --------------- | ---------------- |
-| `actuator` | `X*` | `X-AH-A` | `XR-AO-A` |
-| `actuator` | `R*` | `R-AH-A` | `XR-AO-A` |
-| `bracket` | `X*` | `XR-AO-B` | `X-AH-B` |
-| `bracket` | `R*` | `XR-AO-B` | `R-AH-B` |
-| `link` | `X*` | `XR-AO-B` | `X-AH-B` |
-| `link` | `R*` | `XR-AO-B` | `R-AH-B` |
-| `end-effector` | `custom` | any | none |
-| `end-effector` | `parallel` | `XR-AO-B` | none |
+| `actuator` | `X*` | `X-AH-A` | `X-AO-A` |
+| `actuator` | `R*` | `R-AH-A` | `R-AO-A` |
+| `bracket` | `X*` | `X-AO-B` | `X-AH-B` |
+| `bracket` | `R*` | `R-AO-B` | `R-AH-B` |
+| `link` | `X*` | `X-AO-B` | `X-AH-B` |
+| `link` | `R*` | `R-AO-B` | `R-AH-B` |
+| `end-effector` | `Custom` | any | none |
+| `end-effector` | `X5Parallel` | `X-AO-B` | none |
+| `end-effector` | `R8Parallel` | `R-AO-B` | none |
 | `rigid-body` | n/a | any | any |
 | `joint` | n/a | any | any |
 
