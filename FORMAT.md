@@ -169,6 +169,8 @@ An end effector refers to a component at the end of a kinematic chain (e.g., tha
   - Custom (fully specifiable by the user)
   - X5Parallel (matches the parallel jaw gripper attachment to a HEBI gripper)
   - R8Parallel (matches the parallel jaw gripper attachment to a HEBI gripper)
+- `output_rot` (rotation matrix): the orientation of the output of the end effector.  Defaults to identity.
+- `output_trans` (translation vector, m): The position the output of the end effector.  Defaults to (0,0,0).  
 
 **Example:**
 
