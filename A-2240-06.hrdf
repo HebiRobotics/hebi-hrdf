@@ -1,9 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!-- For documentation on the HEBI Robot Configuration please visit: -->
 <!-- https://github.com/HebiRobotics/hebi-hrdf/blob/master/FORMAT.md -->
 
 <!-- R-Series Arm (6-DoF) -->
-
-<?xml version="1.0" encoding="UTF-8"?>
 <robot version="1.2.0">
   <actuator type="R8-16"/>
   <bracket type="R8HeavyRightOutside"/>
