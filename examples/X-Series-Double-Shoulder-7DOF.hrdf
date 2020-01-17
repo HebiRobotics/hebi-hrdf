@@ -13,7 +13,7 @@
   <!-- Should probably add offset mass at some point -->
   <actuator type="X8-16"/>
   
-  <!-- Double-Actuator Yoke Bracket -->
+  <!-- X-Series Double-Actuator Yoke Bracket (A-2190-01) -->
   <rigid-body mass="0.500" 
               com_trans="0.06 0 -0.08855"
               output_trans="0.122 0 -0.08855"
