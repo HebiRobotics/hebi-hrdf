@@ -250,7 +250,7 @@ For built-in bracket types, you may not have more than the number of outputs tha
 <output rot="Rx(pi/4)" trans="0.5 0 0"/>
 ```
 
-### Connecting Robot Model Elements
+## Connecting Robot Model Elements
 
 For the descriptions below, assume `<elem[0-9]*/>` is any of actuator, link, bracket, end-effector, rigid-body, and joint, with all parameters defined as necessary.
 
