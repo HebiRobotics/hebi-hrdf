@@ -1,5 +1,16 @@
 # Changelog
 
+## v1.3.0
+Changes:
+- added tree support (including `output` element definition)
+
+## v1.2.0
+Changes:
+- Added description attribute to robot element
+- Added R-series actuator, link, and bracket types
+- Added end-effector robot model element type
+- Explicitly defined interface types
+
 ## v1.1.0
 
 Changes:
