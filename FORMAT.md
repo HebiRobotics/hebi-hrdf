@@ -17,7 +17,6 @@ When the term _whitespace_ is used in this document, it will refer to the ASCII 
 The attributes supported by the elements are of several basic types, described in more detail at the bottom of this document.
 
 * [enums](#enums) (possible string values for an attribute)
-* [unsigned integer](#unsigned-integer) values; assumes 32 bit unsigned integer.
 * Basic [floating point](#floating-point) numbers
 * [floating point formulas](#floating-point-formula) combining numbers, ()+-/* operators, and the constant `pi`
 * [rotation matrix](#rotation-matrix) values, either in `Rx/Ry/Rz` shorthand or all entries of the matrix
