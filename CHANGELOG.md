@@ -1,16 +1,19 @@
 # Changelog
 
 ## v1.3.0
+
 Changes:
 - added tree support (including `output` element definition)
 
 ## v1.2.0
+
 Changes:
-- Added description attribute to robot element
-- Added R-series actuator, link, and bracket types
-- Added inline link types
-- Added end-effector robot model element type
-- Explicitly defined strongly-typed interfaces
+- Added support for R-series actuators, links, and brackets
+- Added support for input and output link types (allowing for inline or right angle styles)
+- Added explicit end-effector types to correspond to API end-effector frames
+- Added explicit notion of "interface types" that enforce addition of only mechnically compatible elements
+- Added optional "description" parameter for <robot>
+- Updated example HRDF files, and added ones for standard R-series arms and arms with grippers
 
 ## v1.1.0
 
