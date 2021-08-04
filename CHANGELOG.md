@@ -8,8 +8,9 @@ Changes:
 Changes:
 - Added description attribute to robot element
 - Added R-series actuator, link, and bracket types
+- Added inline link types
 - Added end-effector robot model element type
-- Explicitly defined interface types
+- Explicitly defined strongly-typed interfaces
 
 ## v1.1.0
 
