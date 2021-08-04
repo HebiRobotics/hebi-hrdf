@@ -218,9 +218,10 @@ The `include` element is used to allow commonly used snippets of HRDF to be reus
 
 Note that any attributes on the "robot" element in the included are ignored.  A compliant parser should generate and error if the file cannot be found.
 
-
 **Required Attributes:**
 - `path` (string) Path to the HRDF file to be included. A forward slash should be used as a file separation character. Absolute paths begin with "/", while relative paths do not.  The double dot ".." pattern moves up a directory.
+
+Note: relative paths are relative to the location of the current HRDF being parsed.  A relative path within an hierarchical include chain is dependent on the file with that particular include tag, not the root file in the chain.
 
 **Examples:**
 
