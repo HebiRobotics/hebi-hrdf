@@ -212,6 +212,40 @@ Note: the HRDF file is ill-formed and should generate a parsing error if both `m
 <actuator type="X5-9" mass_offset="0.2"/>
 ```
 
+### `<include>`
+
+The `include` element is used to allow commonly used snippets of HRDF to be reused in a single file or in multiple files.  The `include` element is used in place of a normal robot model element, and the filename referenced must be a complete and valid .HRDF file.  The contents of the "robot" element of this .HRDF file replace the "include" element in the final HRDF.
+
+Note that any attributes on the "robot" element in the included are ignored.  A compliant parser should generate and error if the file cannot be found.
+
+
+**Required Attributes:**
+- `path` (string) Path to the HRDF file to be included. A forward slash should be used as a file separation character. Absolute paths begin with "/", while relative paths do not.  The double dot ".." pattern moves up a directory.
+
+**Examples:**
+
+Absolute path:
+
+```xml
+<include path="/home/robotmaker/my_robot/left_arm.hrdf"/>
+```
+
+Absolute path for Windows system:
+
+```xml
+<include path="/c/users/robotmaker/my_robot/left_arm.hrdf"/>
+```
+
+Relative paths:
+
+```xml
+<include path="left_arm.hrdf"/>
+```
+
+```xml
+<include path="../robot_parts/left_arm.hrdf"/>
+```
+
 ### Connecting Robot Model Elements
 
 For the descriptions below, assume `<elem[0-9]*/>` is any of actuator, link, bracket, end-effector, rigid-body, and joint, with all parameters defined as necessary.
