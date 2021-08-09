@@ -6,7 +6,7 @@ Examples of this format in use can be seen in the kits in this directory.
 
 ## Version and versioning
 
-The following specification is version 1.2.0 of this format.
+The following specification is version 1.3.0 of this format.
 
 The version numbering follows semantic versioning practices. Major version changes (e.g., 1.x.x->2.x.x) imply non-backwards compatible changes, whereas minor version changes (e.g., 1.3.0->1.4.0) imply backwards compatibility: existing robot configuration files will work with the updated specification, although files specifically using the newer specification may not be supported by tools using an older version of the standard.  Revision changes (1.4.2 -> 1.4.3) imply only clarification of the documentation, and should be treated as compatible.  Each new version change of the specification will be associated with a tag/release in this repository.
 
@@ -31,6 +31,7 @@ The robot element is the root element of a robot model.
   - 1.0.0
   - 1.1.0
   - 1.2.0
+  - 1.3.0
 
 **Optional Attributes:**
 - `rot` (rotation matrix) specify the rotation of the base frame of the model; defaults to identity matrix.
@@ -46,13 +47,13 @@ The `robot` element can only contain [`robot element`](robot-elements) subelemen
 
 ## Robot Elements
 
-Each "robot element" element has an assumed input interface, and one output interface. It may or may not have mass and inertia, depending on its type.
+Each "robot element" element has an assumed input interface, and zero or more output interfaces. It may or may not have mass and inertia, depending on its type.
 
 Note that the parsing of the element name (e.g., `actuator`) is case sensitive, and so `Actuator` will generate and error.
 
 ### `<actuator>`
 
-The actuator element represents actuators such as the X5-4.  It is assumed to have a mass and inertia, as well as an output interface.  All actuators have one output interface.  It is assumed that there is a single associated degree of freedom in the robot model with this element.
+The actuator element represents actuators such as the X5-4.  It is assumed to have a mass and inertia, as well as a single output interface.  It is assumed that there is a single associated degree of freedom in the robot model with this element.  The `actuator` element can have no child elements.
 
 **Required attributes:**
 - `type` (string/enum) Currently supported values:
@@ -74,7 +75,7 @@ The actuator element represents actuators such as the X5-4.  It is assumed to ha
 
 ### `<link>`
 
-The link element refers to a parameterized rigid body.  All links have one output interface.
+The link element refers to a parameterized rigid body.  All links have one output interface.  The `link` element can have no child elements.
 
 Note that the "extension" and "twist" values correspond to those shown on http://docs.hebi.us/hardware.html.
 
@@ -101,7 +102,7 @@ Note that the "extension" and "twist" values correspond to those shown on http:/
 
 ### `<bracket>`
 
-The bracket element refers to a rigid body that connects modules, such as a light wrist bracket.  All brackets have one output interface.
+The bracket element refers to a rigid body that connects modules, such as a light wrist bracket.  Brackets can have one or more output interfaces.  The bracket element can contain 0 to _n_ `output` child elements, where _n_ is the number of output interfaces defined by this bracket, but no other child elements.
 
 **Required attributes:**
 - `type` (string/enum) supported values are:
@@ -118,29 +119,43 @@ The bracket element refers to a rigid body that connects modules, such as a ligh
   - R8HeavyRightInside
   - R8HeavyRightOutside  
 
+Currently, all of the given bracket elements have a single output interface.
+
 ### `<rigid-body>`
 
-The rigid body refers to a solid body with mass and one output.
+The rigid body refers to a solid body with mass and one or more outputs. Defaults to a single output interface. The rigid-body element can contain any number of `output` child elements, but no other child elements.
 
 **Required attributes:**
 `mass` (floating point formula, kg)
 
 **Optional attributes:**
-- `com_rot` (rotation matrix) the orientation of the center of mass (used for simplifying the inertia tensor description if desired).  Defaults to identity.
-- `com_trans` (translation vector, m) The position of the center of mass.  Defaults to (0,0,0).
-- `output_rot` (rotation matrix): the orientation of the output frame.  Defaults to identity.
-- `output_trans` (translation vector, m): The position the output frame.  Defaults to (0,0,0).
-- `ixx`, `iyy`, `izz`, `ixy`, `ixz`, `iyz` (floating point formulae, kg m^2) The 6 elements of the inertia tensor, relative to the COM frame as given above.  Each defaults to 0 (note, this means overall default is a point mass).
+- `com_rot` (rotation matrix): the orientation of the center of mass (used for simplifying the inertia tensor description if desired). Defaults to identity.
+- `com_trans` (translation vector, m): The position of the center of mass. Defaults to (0,0,0).
+- `output_rot` (rotation matrix): The default orientation of the output frames. Defaults to an identity matrix.
+- `output_trans` (translation vector, m): The default position the output frames. Defaults to (0,0,0).
+- `ixx`, `iyy`, `izz`, `ixy`, `ixz`, `iyz` (floating point formulae, kg m^2): The 6 elements of the inertia tensor, relative to the COM frame as given above.  Each defaults to 0 (note, this means overall default is a point mass).
 
-**Example:**
+**Examples:**
+
+Single-output rigid body:
 
 ```xml
 <rigid-body mass="0.5" com_trans="0.25 0 0" output_rot="Rx(pi/4)" output_trans="0.5 0 0"/>
 ```
 
+Multi-output rigid body (see below for "output" element details):
+
+```xml
+<rigid-body mass="0.5" com_trans="0.25 0 0" rot="Rx(pi)">
+  <output rot="Rx(pi/4)" trans="0.5 0 0"/>
+  <output trans="1.5 0 0"/> <!-- note that this defaults to the Rx(pi) rotation -->
+  <output> <!-- note that this defaults to the Rx(pi) rotation and (0,0,0) translation -->
+</rigid-body>
+```
+
 ### `<joint>`
 
-The joint refers to a massless degree of freedom.
+The joint refers to a massless degree of freedom; it always has a single output interface. The `joint` element can have no child elements.
 
 **Required attributes:**
 - `axis` (string/enum) This can be a rotational or translational degree of freedom about a principal coordinate axis; supported values are:
@@ -159,7 +174,7 @@ The joint refers to a massless degree of freedom.
 
 ### `<end-effector>`
 
-An end effector refers to a component at the end of a kinematic chain (e.g., that has no children).  The key aspect of the end effector is that it identifies the location of an "end effector frame" at a specified relative position.
+An end effector refers to a component at the end of a kinematic chain (e.g., it has no children/output interfaces). The key aspect of the end effector is that it identifies the location of an "end effector frame" at a specified relative position. The `end-effector` element can have no child elements.
 
 (Note that HRDFs of version <= 1.1.0 do not explicitly have the notion of an end effector frame, so when being loaded into a compliant parser, the API adds an implicit "end effector frame" to the end of the chain of elements).
 
@@ -219,25 +234,19 @@ The `include` element is used to allow commonly used snippets of HRDF to be reus
 Note that any attributes on the "robot" element in the included are ignored.  A compliant parser should generate and error if the file cannot be found.
 
 **Required Attributes:**
-- `path` (string) Path to the HRDF file to be included. A forward slash should be used as a file separation character. Absolute paths begin with "/", while relative paths do not.  The double dot ".." pattern moves up a directory.
+- `path` (string) Path to the HRDF file to be included. A forward slash should be used as a file separation character. Paths are relative to the current HRDF file being parsed; absolute paths are not allowed.  The double dot ".." pattern moves up a directory.
 
-Note: relative paths are relative to the location of the current HRDF being parsed.  A relative path within an hierarchical include chain is dependent on the file with that particular include tag, not the root file in the chain.
+Note: A relative path within an hierarchical include chain is dependent on the file with that particular include tag, not the root file in the chain.
 
 **Examples:**
 
-Absolute path:
-
 ```xml
-<include path="/home/robotmaker/my_robot/left_arm.hrdf"/>
+<include path="my_robot/left_arm.hrdf"/>
 ```
 
-Absolute path for Windows system:
-
 ```xml
-<include path="/c/users/robotmaker/my_robot/left_arm.hrdf"/>
+<include path="./my_robot/left_arm.hrdf"/>
 ```
-
-Relative paths:
 
 ```xml
 <include path="left_arm.hrdf"/>
@@ -247,9 +256,34 @@ Relative paths:
 <include path="../robot_parts/left_arm.hrdf"/>
 ```
 
-### Connecting Robot Model Elements
+## Output element
+
+The `output` element is a special child element used to define the connection points for brackets and rigid bodies with multiple output interfaces.  It is unnecessary for pure kinematic chains. It may only be present as the child of a `bracket` with multiple output interfaces or a `rigid-body` element.  For `bracket` and `rigid-body` elements with a single output interface, omitting the `output` element and using a chain of robot model elements is preferred (see below, "Connecting Robot Model Elements").
+
+The `output` element can only contain [`robot element`](robot-elements) subelements.
+
+**Optional attributes:**
+
+- `rot` (rotation matrix): the orientation of the output interface frame relative to the input interface. Defaults to identity or the value defined by the parent `bracket` or `rigid-body` element. This attribute will cause a parsing error if parent element of the `output` element is not a `rigid-body`.
+- `trans` (translation vector, m): The position the output interface frame.  Defaults to (0,0,0). Defaults to identity or the value defined by the parent `bracket` or `rigid-body` element. This attribute will cause a parsing error if parent element of the `output` element is not a `rigid-body`.
+
+**Notes/Constraints:**
+
+In a bracket, the output interfaces are inherently defined, and so the rotations and translations are not permitted to be changed.
+
+For built-in bracket types, you may not have more than the number of outputs that the object defines.  You may omit unused outputs after the last used output.
+
+**Example:**
+
+```xml
+<output rot="Rx(pi/4)" trans="0.5 0 0"/>
+```
+
+## Connecting Robot Model Elements
 
 For the descriptions below, assume `<elem[0-9]*/>` is any of actuator, link, bracket, end-effector, rigid-body, and joint, with all parameters defined as necessary.
+
+**Kinematic Chains**
 
 The `robot` element can only contain `<elem>` subelements.  It contains an implicitly ordered list of them, with no minimum count:
 
@@ -267,10 +301,105 @@ When there is a list of `<elem>` elements, they are assumed to following each ot
   <elem2>
 </robot>
 ```
+**Trees**
+
+To form tree structures, or explicitly attach an `<elem>` to a specific output of a multi-output `bracket`/`rigid-body` (e.g., leg "2" on a hexapod), you must use the `<output>` element. The code below demonstrates attaching `<elem2>` to the first output of `<elem1>`:
+
+```
+<robot>
+  <elem1>
+    <output>
+      <elem2/>
+    </output>
+  </elem1>
+</robot>
+```
+
+Below demonstrates attaching `<elem2>` to the _second_ output of `<elem1>`.  Note the use of an empty `<output>` element:
+
+```
+<robot>
+  <elem1>
+    <output/>
+    <output>
+      <elem2/>
+    </output>
+  </elem1>
+</robot>
+```
+
+Note that if `elem1` was a bracket with a single output interface, this would cause a parsing error. A `rigid-body` element supports a dynamic number of output interfaces, based on the number of `output` elements given.
+
+You can use multiple "output" elements to explicitly attach multiple children; see this fictitious "hexapod body" bracket
+example, with only four legs attached
+
+```
+...
+<bracket type="XHexapodBody">
+  <output>
+    <elem1/>
+  </output>
+  <output/>
+  <output>
+    <elem2/>
+  </output>
+  <output>
+    <elem3/>
+  </output>
+  <output/>
+  <output>
+    <elem4/>
+  </output>
+</bracket>
+...
+```
+
+The contents of an `output` element follow the same rules as for the `robot` root element, and therefore can  contain a chain of robot model elements; see the hexapod leg attached to the second output of this ficticious hexapod body bracket.
+
+```
+...
+<bracket type="XHexapodBody">
+  <output/>  
+  <output>
+    <elem1/>
+    <elem2/>
+    <elem3/>
+  </output>
+</bracket>
+...
+```
+
+For a bracket or rigid body with only the first output used, the kinematic chain format should be used, although both will be accepted by compatible parsers. Specifically, prefer:
+
+```
+...
+<bracket>
+<elem1/>
+<elem2/>
+<elem3/>
+...
+```
+
+to
+
+
+```
+...
+<bracket>
+  <output>
+    <elem1/>
+    <elem2/>
+    <elem3/>
+  </output>
+</bracket>
+...
+```
+
+These both define the same structure, but the former has less nesting and is more readable.
 
 **Interface types:**
 
-Each robot model element has an input interface and an output interface, each of a specific type and polarity. Following is a list of interface types; each listed type has two polarities, `A` and `B`.  
+Each robot model element has an input interface and zero or more output interface, each of a specific type and polarity. Following is a list of interface types; each listed type has two polarities, `A` and `B`.  
 
 - `X-AH` X Actuator Housing Interface
 - `R-AH` R Actuator Housing Interface
