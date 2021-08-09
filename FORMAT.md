@@ -236,7 +236,10 @@ Note that any attributes on the "robot" element in the included are ignored.  A 
 **Required Attributes:**
 - `path` (string) Path to the HRDF file to be included. A forward slash should be used as a file separation character. Paths are relative to the current HRDF file being parsed; absolute paths are not allowed.  The double dot ".." pattern moves up a directory.
 
-Note: A relative path within an hierarchical include chain is dependent on the file with that particular include tag, not the root file in the chain.
+All files that are included must match the same HRDF file version as the parent file.
+
+Note: The relative path within an hierarchical include chain is dependent on the file with that particular include tag, not the root file in the chain.
+
 
 **Examples:**
 
