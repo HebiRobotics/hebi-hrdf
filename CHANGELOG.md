@@ -4,6 +4,7 @@
 
 Changes:
 - added tree support (including `output` element definition)
+- added support for include tags
 
 ## v1.2.0
 

@@ -227,6 +227,38 @@ Note: the HRDF file is ill-formed and should generate a parsing error if both `m
 <actuator type="X5-9" mass_offset="0.2"/>
 ```
 
+### `<include>`
+
+The `include` element is used to allow commonly used snippets of HRDF to be reused in a single file or in multiple files.  The `include` element is used in place of a normal robot model element, and the filename referenced must be a complete and valid .HRDF file.  The contents of the "robot" element of this .HRDF file replace the "include" element in the final HRDF.
+
+Note that any attributes on the "robot" element in the included are ignored.  A compliant parser should generate and error if the file cannot be found.
+
+**Required Attributes:**
+- `path` (string) Path to the HRDF file to be included. A forward slash should be used as a file separation character. Paths are relative to the current HRDF file being parsed; absolute paths are not allowed.  The double dot ".." pattern moves up a directory.
+
+All files that are included must match the same HRDF file version as the parent file.
+
+Note: The relative path within an hierarchical include chain is dependent on the file with that particular include tag, not the root file in the chain.
+
+
+**Examples:**
+
+```xml
+<include path="my_robot/left_arm.hrdf"/>
+```
+
+```xml
+<include path="./my_robot/left_arm.hrdf"/>
+```
+
+```xml
+<include path="left_arm.hrdf"/>
+```
+
+```xml
+<include path="../robot_parts/left_arm.hrdf"/>
+```
+
 ## Output element
 
 The `output` element is a special child element used to define the connection points for brackets and rigid bodies with multiple output interfaces.  It is unnecessary for pure kinematic chains. It may only be present as the child of a `bracket` with multiple output interfaces or a `rigid-body` element.  For `bracket` and `rigid-body` elements with a single output interface, omitting the `output` element and using a chain of robot model elements is preferred (see below, "Connecting Robot Model Elements").
