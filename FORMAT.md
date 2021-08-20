@@ -154,13 +154,14 @@ The rigid body refers to a solid body with mass and one or more outputs. Default
 - `output_rot` (rotation matrix): The default orientation of the output frames. Defaults to an identity matrix.
 - `output_trans` (translation vector, m): The default position the output frames. Defaults to (0,0,0).
 - `ixx`, `iyy`, `izz`, `ixy`, `ixz`, `iyz` (floating point formulae, kg m^2): The 6 elements of the inertia tensor, relative to the COM frame as given above.  Each defaults to 0 (note, this means overall default is a point mass).
+- `mesh_path` (string): Relative path to a file used to store 3D mesh information for visualization purposes. A forward slash should be used as a file separation character. Paths are relative to the current HRDF file being parsed; absolute paths are not allowed.  The double dot ".." pattern moves up a directory.  Supported file types and extensions depend on the application consuming the HRDF file for visualization.
+- `mesh_rot` (rotation matrix): specify the rotation of the base frame of the mesh; defaults to identity matrix. Considered an error if present without a `mesh_path` attribute.
+- `mesh_trans` (translation vector): specify the translation to the base frame of the mesh; defaults to (0,0,0). Considered an error if present without a `mesh_path` attribute.
 
 **Content:**
-In this order:
-- Zero or more of the following:
-  - `<mesh>`: describes visual geometry of the rigid body; see the `<mesh>` element section below.
-- Zero or more of the following:
-  - `<output>` Used to describe tree-like kinematic structures. See the `<output>` element section below.
+Zero or more of the following:
+- `<output>` Used to describe tree-like kinematic structures. See the `<output>` element section below.
+
 
 **Examples:**
 
@@ -295,20 +296,6 @@ Note: The relative path within an hierarchical include chain is dependent on the
 ```xml
 <include path="../robot_parts/left_arm.hrdf"/>
 ```
-
-## Mesh element
-
-The `mesh` element is a child element that can be used to store mesh information for visualization purposes.
-
-**Required Attributes:**
-- `path` (string) Relative path to the mesh file to be included. A forward slash should be used as a file separation character. Paths are relative to the current HRDF file being parsed; absolute paths are not allowed.  The double dot ".." pattern moves up a directory.  Supported file types and extensions depend on the application consuming the HRDF file for visualization.
-
-**Optional attributes:**
-- `rot` (rotation matrix) specify the rotation of the base frame of the mesh; defaults to identity matrix.
-- `trans` (translation vector) specify the translation to the base frame of the mesh; defaults to (0,0,0)
-
-**Content:**
-None
 
 ## Output element
 
