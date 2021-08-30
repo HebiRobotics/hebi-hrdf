@@ -38,6 +38,16 @@ The robot element is the root element of a robot model.
 - `trans` (translation vector) specify the translation to the base frame of the model; defaults to (0,0,0)
 - `description` (string) human readable description of this robot
 
+**Content:**
+Zero or more of the following:
+- `<actuator>`
+- `<bracket>`
+- `<link>`
+- `<rigid-body>`
+- `<joint>`
+- `<end-effector>`
+- `<include>`
+
 **Example:**
 ```xml
 <robot rot="1 0 0 0 1 0 0 0 1" trans="0 0 0"/>
@@ -67,6 +77,9 @@ The actuator element represents actuators such as the X5-4.  It is assumed to ha
   - R8-9
   - R8-16
 
+**Content:**
+None
+
 **Example:**
 
 ```xml
@@ -94,6 +107,9 @@ Note that the "extension" and "twist" values correspond to those shown on http:/
   - RightAngle (supported for both X5 and R8 link types)
   - Inline (supported for both X5 and R8 link types)
 
+**Content:**
+None
+
 **Example:**
 
 ```xml
@@ -119,6 +135,10 @@ The bracket element refers to a rigid body that connects modules, such as a ligh
   - R8HeavyRightInside
   - R8HeavyRightOutside  
 
+**Content:**
+Zero or more of the following:
+- `<output>`: Zero to _n_; used to describe tree-like kinematic structures. The value of _n_ depends on the bracket type.  See the `<output>` element section below.
+
 Currently, all of the given bracket elements have a single output interface.
 
 ### `<rigid-body>`
@@ -134,6 +154,14 @@ The rigid body refers to a solid body with mass and one or more outputs. Default
 - `output_rot` (rotation matrix): The default orientation of the output frames. Defaults to an identity matrix.
 - `output_trans` (translation vector, m): The default position the output frames. Defaults to (0,0,0).
 - `ixx`, `iyy`, `izz`, `ixy`, `ixz`, `iyz` (floating point formulae, kg m^2): The 6 elements of the inertia tensor, relative to the COM frame as given above.  Each defaults to 0 (note, this means overall default is a point mass).
+- `mesh_path` (string): Relative path to a file used to store 3D mesh information for visualization purposes. A forward slash should be used as a file separation character. Paths are relative to the current HRDF file being parsed; absolute paths are not allowed.  The double dot ".." pattern moves up a directory.  Supported file types and extensions depend on the application consuming the HRDF file for visualization.
+- `mesh_rot` (rotation matrix): specify the rotation of the base frame of the mesh; defaults to identity matrix. Considered an error if present without a `mesh_path` attribute.
+- `mesh_trans` (translation vector): specify the translation to the base frame of the mesh; defaults to (0,0,0). Considered an error if present without a `mesh_path` attribute.
+
+**Content:**
+Zero or more of the following:
+- `<output>` Used to describe tree-like kinematic structures. See the `<output>` element section below.
+
 
 **Examples:**
 
@@ -166,6 +194,9 @@ The joint refers to a massless degree of freedom; it always has a single output 
   - ty
   - tz
 
+**Content:**
+None
+
 **Example:**
 
 ```xml
@@ -186,6 +217,9 @@ An end effector refers to a component at the end of a kinematic chain (e.g., it 
   - R8Parallel (matches the parallel jaw gripper attachment to a HEBI gripper)
 - `output_rot` (rotation matrix): the orientation of the output of the end effector.  Defaults to identity.
 - `output_trans` (translation vector, m): The position the output of the end effector.  Defaults to (0,0,0).  
+
+**Content:**
+None
 
 **Example:**
 
@@ -234,12 +268,16 @@ The `include` element is used to allow commonly used snippets of HRDF to be reus
 Note that any attributes on the "robot" element in the included are ignored.  A compliant parser should generate and error if the file cannot be found.
 
 **Required Attributes:**
-- `path` (string) Path to the HRDF file to be included. A forward slash should be used as a file separation character. Paths are relative to the current HRDF file being parsed; absolute paths are not allowed.  The double dot ".." pattern moves up a directory.
+- `path` (string) Relative path to the HRDF file to be included. A forward slash should be used as a file separation character. Paths are relative to the current HRDF file being parsed; absolute paths are not allowed.  The double dot ".." pattern moves up a directory.
+
+**Content:**
+None
+
+**Notes/Constraints:**
 
 All files that are included must match the same HRDF file version as the parent file.
 
 Note: The relative path within an hierarchical include chain is dependent on the file with that particular include tag, not the root file in the chain.
-
 
 **Examples:**
 
@@ -266,9 +304,18 @@ The `output` element is a special child element used to define the connection po
 The `output` element can only contain [`robot element`](robot-elements) subelements.
 
 **Optional attributes:**
-
 - `rot` (rotation matrix): the orientation of the output interface frame relative to the input interface. Defaults to identity or the value defined by the parent `bracket` or `rigid-body` element. This attribute will cause a parsing error if parent element of the `output` element is not a `rigid-body`.
 - `trans` (translation vector, m): The position the output interface frame.  Defaults to (0,0,0). Defaults to identity or the value defined by the parent `bracket` or `rigid-body` element. This attribute will cause a parsing error if parent element of the `output` element is not a `rigid-body`.
+
+**Content:**
+Zero or more of the following:
+- `<actuator>`
+- `<bracket>`
+- `<link>`
+- `<rigid-body>`
+- `<joint>`
+- `<end-effector>`
+- `<include>`
 
 **Notes/Constraints:**
 

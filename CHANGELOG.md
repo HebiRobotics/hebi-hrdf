@@ -4,7 +4,8 @@
 
 Changes:
 - added tree support (including `output` element definition)
-- added support for include tags
+- added support for include elements
+- added support for mesh attributes
 
 ## v1.2.0
 
