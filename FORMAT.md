@@ -174,10 +174,10 @@ Single-output rigid body:
 Multi-output rigid body (see below for "output" element details):
 
 ```xml
-<rigid-body mass="0.5" com_trans="0.25 0 0" rot="Rx(pi)">
+<rigid-body mass="0.5" com_trans="0.25 0 0" output_rot="Rx(pi)">
   <output rot="Rx(pi/4)" trans="0.5 0 0"/>
   <output trans="1.5 0 0"/> <!-- note that this defaults to the Rx(pi) rotation -->
-  <output> <!-- note that this defaults to the Rx(pi) rotation and (0,0,0) translation -->
+  <output/> <!-- note that this defaults to the Rx(pi) rotation and (0,0,0) translation -->
 </rigid-body>
 ```
 
