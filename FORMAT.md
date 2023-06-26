@@ -169,7 +169,6 @@ The rigid body refers to a solid body with mass and one or more outputs. Default
 Zero or more of the following:
 - `<output>` Used to describe tree-like kinematic structures. See the `<output>` element section below.
 
-
 **Examples:**
 
 Single-output rigid body:
@@ -217,7 +216,6 @@ An end effector refers to a component at the end of a kinematic chain (e.g., it 
 (Note that HRDFs of version <= 1.1.0 do not explicitly have the notion of an end effector frame, so when being loaded into a compliant parser, the API adds an implicit "end effector frame" to the end of the chain of elements).
 
 **Optional attributes:**
-
 - `type` (string/enum) The style of end effector.  Defaults to `Custom`. Currently supported values:
   - Custom (fully specifiable by the user)
   - X5Parallel (matches the parallel jaw gripper attachment to a HEBI gripper)
@@ -237,6 +235,22 @@ None
 **Implementation notes:**
 
 As with other built-in element types, the `end-effector` has mass, center of mass, interia, and output frame information.  The default values for the optional attributes depend on the type of the end effector.  For the `Custom` type, these values match a `rigid-body` of mass 0.
+
+### Identifying elements by name
+
+The built in and custom robot model elements (`actuator`, `link`, `bracket`, `end-effector`, `rigid-body`, and `joint`) all have an attribute that allows retrieval through the APIs by name instead of by index. The values of `<tag>` elements must be globally unique within all descendants of a `<robot>` object.
+
+**Tag**
+- `tag` (string) A human-readable name identifying this element; this can be used to retrieve robot model elements by name instead of by index. 
+
+**Example:**
+
+```xml
+<actuator type="X5-9" mass_offset="0.2" tag="wrist"/>
+```
+
+Then from APIs, one can call functions such as `getFrameByName("wrist")`.
+
 
 ### Offsetting and overwriting dynamic properties
 

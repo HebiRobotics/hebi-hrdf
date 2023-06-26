@@ -4,6 +4,7 @@
 
 Changes:
 - Added support for T-series actuators
+- Added support for tag attributes on robot model elements.
 
 ## v1.3.0
 
