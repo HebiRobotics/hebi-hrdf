@@ -5,6 +5,7 @@
 Changes:
 - Added support for T-series actuators
 - Added support for tag attributes on robot model elements.
+- Added support for web URLs for rigid-body meshes
 
 ## v1.3.0
 
