@@ -6,7 +6,7 @@ Examples of this format in use can be seen in the kits in this directory.
 
 ## Version and versioning
 
-The following specification is version 1.3.0 of this format.
+The following specification is version 1.4.0 of this format.
 
 The version numbering follows semantic versioning practices. Major version changes (e.g., 1.x.x->2.x.x) imply non-backwards compatible changes, whereas minor version changes (e.g., 1.3.0->1.4.0) imply backwards compatibility: existing robot configuration files will work with the updated specification, although files specifically using the newer specification may not be supported by tools using an older version of the standard.  Revision changes (1.4.2 -> 1.4.3) imply only clarification of the documentation, and should be treated as compatible.  Each new version change of the specification will be associated with a tag/release in this repository.
 
@@ -32,6 +32,7 @@ The robot element is the root element of a robot model.
   - 1.1.0
   - 1.2.0
   - 1.3.0
+  - 1.4.0
 
 **Optional Attributes:**
 - `rot` (rotation matrix) specify the rotation of the base frame of the model; defaults to identity matrix.
@@ -76,6 +77,12 @@ The actuator element represents actuators such as the X5-4.  It is assumed to ha
   - R8-3
   - R8-9
   - R8-16
+  - T5-1
+  - T5-4
+  - T5-9
+  - T8-3
+  - T8-9
+  - T8-16
 
 **Content:**
 None
@@ -473,6 +480,7 @@ A full list of element interface types is given below. An asterisk (`*`) in the 
 | ------- | ---- | --------------- | ---------------- |
 | `actuator` | `X*` | `X-AH-A` | `X-AO-A` |
 | `actuator` | `R*` | `R-AH-A` | `R-AO-A` |
+| `actuator` | `T*` | `R-AH-A` | `R-AO-A` |
 | `bracket` | `X*` | `X-AO-B` | `X-AH-B` |
 | `bracket` | `R*` | `R-AO-B` | `R-AH-B` |
 | `link` | `X*` | `X-AO-B` | `X-AH-B` |
@@ -482,6 +490,9 @@ A full list of element interface types is given below. An asterisk (`*`) in the 
 | `end-effector` | `R8Parallel` | `R-AO-B` | none |
 | `rigid-body` | n/a | any | any |
 | `joint` | n/a | any | any |
+
+Note that the T-series actuators share the R-series bolt patterns and therefore have the same
+interface types.
 
 ## Types
 
