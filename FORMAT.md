@@ -238,9 +238,9 @@ As with other built-in element types, the `end-effector` has mass, center of mas
 
 ### Identifying elements by name
 
-The built in and custom robot model elements (`actuator`, `link`, `bracket`, `end-effector`, `rigid-body`, and `joint`) all have an attribute that allows retrieval through the APIs by name instead of by index. The values of `<tag>` elements must be globally unique within all descendants of a `<robot>` object.
+The built in and custom robot model elements (`actuator`, `link`, `bracket`, `end-effector`, `rigid-body`, and `joint`) all have an attribute that allows retrieval through the APIs by name instead of by index. The values of `tag` attributes must be globally unique within all descendants of a `<robot>` object.
 
-**Tag**
+**Tag Attribute**
 - `tag` (string) A human-readable name identifying this element; this can be used to retrieve robot model elements by name instead of by index. 
 
 **Example:**
