@@ -1,11 +1,18 @@
 # Changelog
 
+## v1.4.0
+
+Changes:
+- Added support for T-series actuators
+- Added support for tag attributes on robot model elements.
+- Added support for web URLs for rigid-body meshes
+
 ## v1.3.0
 
 Changes:
-- added tree support (including `output` element definition)
-- added support for include elements
-- added support for mesh attributes
+- Added tree support (including `output` element definition)
+- Added support for include elements
+- Added support for mesh attributes
 
 ## v1.2.0
 
