@@ -6,7 +6,7 @@ Examples of this format in use can be seen in the kits in this directory.
 
 ## Version and versioning
 
-The following specification is version 1.3.0 of this format.
+The following specification is version 1.4.0 of this format.
 
 The version numbering follows semantic versioning practices. Major version changes (e.g., 1.x.x->2.x.x) imply non-backwards compatible changes, whereas minor version changes (e.g., 1.3.0->1.4.0) imply backwards compatibility: existing robot configuration files will work with the updated specification, although files specifically using the newer specification may not be supported by tools using an older version of the standard.  Revision changes (1.4.2 -> 1.4.3) imply only clarification of the documentation, and should be treated as compatible.  Each new version change of the specification will be associated with a tag/release in this repository.
 
@@ -32,6 +32,7 @@ The robot element is the root element of a robot model.
   - 1.1.0
   - 1.2.0
   - 1.3.0
+  - 1.4.0
 
 **Optional Attributes:**
 - `rot` (rotation matrix) specify the rotation of the base frame of the model; defaults to identity matrix.
@@ -76,6 +77,12 @@ The actuator element represents actuators such as the X5-4.  It is assumed to ha
   - R8-3
   - R8-9
   - R8-16
+  - T5-1
+  - T5-4
+  - T5-9
+  - T8-3
+  - T8-9
+  - T8-16
 
 **Content:**
 None
@@ -154,14 +161,13 @@ The rigid body refers to a solid body with mass and one or more outputs. Default
 - `output_rot` (rotation matrix): The default orientation of the output frames. Defaults to an identity matrix.
 - `output_trans` (translation vector, m): The default position the output frames. Defaults to (0,0,0).
 - `ixx`, `iyy`, `izz`, `ixy`, `ixz`, `iyz` (floating point formulae, kg m^2): The 6 elements of the inertia tensor, relative to the COM frame as given above.  Each defaults to 0 (note, this means overall default is a point mass).
-- `mesh_path` (string): Relative path to a file used to store 3D mesh information for visualization purposes. A forward slash should be used as a file separation character. Paths are relative to the current HRDF file being parsed; absolute paths are not allowed.  The double dot ".." pattern moves up a directory.  Supported file types and extensions depend on the application consuming the HRDF file for visualization.
+- `mesh_path` (string): Relative file path or web URL to a file used to store 3D mesh information for visualization purposes. A forward slash should be used as a file separation character. File paths are relative to the current HRDF file being parsed; absolute paths are not allowed.  The double dot ".." pattern moves up a directory.  Web URLs must start with `http://` or `https://`. Supported file types, extensions, and sources (e.g., local vs web) depend on the application consuming the HRDF file for visualization.
 - `mesh_rot` (rotation matrix): specify the rotation of the base frame of the mesh; defaults to identity matrix. Considered an error if present without a `mesh_path` attribute.
 - `mesh_trans` (translation vector): specify the translation to the base frame of the mesh; defaults to (0,0,0). Considered an error if present without a `mesh_path` attribute.
 
 **Content:**
 Zero or more of the following:
 - `<output>` Used to describe tree-like kinematic structures. See the `<output>` element section below.
-
 
 **Examples:**
 
@@ -210,7 +216,6 @@ An end effector refers to a component at the end of a kinematic chain (e.g., it 
 (Note that HRDFs of version <= 1.1.0 do not explicitly have the notion of an end effector frame, so when being loaded into a compliant parser, the API adds an implicit "end effector frame" to the end of the chain of elements).
 
 **Optional attributes:**
-
 - `type` (string/enum) The style of end effector.  Defaults to `Custom`. Currently supported values:
   - Custom (fully specifiable by the user)
   - X5Parallel (matches the parallel jaw gripper attachment to a HEBI gripper)
@@ -230,6 +235,22 @@ None
 **Implementation notes:**
 
 As with other built-in element types, the `end-effector` has mass, center of mass, interia, and output frame information.  The default values for the optional attributes depend on the type of the end effector.  For the `Custom` type, these values match a `rigid-body` of mass 0.
+
+### Identifying elements by name
+
+The built in and custom robot model elements (`actuator`, `link`, `bracket`, `end-effector`, `rigid-body`, and `joint`) all have an attribute that allows retrieval through the APIs by name instead of by index. The values of `tag` attributes must be globally unique within all descendants of a `<robot>` object.
+
+**Tag Attribute**
+- `tag` (string) A human-readable name identifying this element; this can be used to retrieve robot model elements by name instead of by index. 
+
+**Example:**
+
+```xml
+<actuator type="X5-9" mass_offset="0.2" tag="wrist"/>
+```
+
+Then from APIs, one can call functions such as `getFrameByName("wrist")`.
+
 
 ### Offsetting and overwriting dynamic properties
 
@@ -473,6 +494,7 @@ A full list of element interface types is given below. An asterisk (`*`) in the 
 | ------- | ---- | --------------- | ---------------- |
 | `actuator` | `X*` | `X-AH-A` | `X-AO-A` |
 | `actuator` | `R*` | `R-AH-A` | `R-AO-A` |
+| `actuator` | `T*` | `R-AH-A` | `R-AO-A` |
 | `bracket` | `X*` | `X-AO-B` | `X-AH-B` |
 | `bracket` | `R*` | `R-AO-B` | `R-AH-B` |
 | `link` | `X*` | `X-AO-B` | `X-AH-B` |
@@ -482,6 +504,9 @@ A full list of element interface types is given below. An asterisk (`*`) in the 
 | `end-effector` | `R8Parallel` | `R-AO-B` | none |
 | `rigid-body` | n/a | any | any |
 | `joint` | n/a | any | any |
+
+Note that the T-series actuators share the R-series bolt patterns and therefore have the same
+interface types.
 
 ## Types
 
