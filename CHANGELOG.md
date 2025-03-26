@@ -1,9 +1,14 @@
 # Changelog
 
-## v1.5.0
+## v1.6.0
 
 Changes:
 - Added support for T25 actuators and hardware
+
+## v1.5.0
+
+Changes:
+- Added optional `gear_ratio` attribute for `joint` elements
 
 ## v1.4.0
 
