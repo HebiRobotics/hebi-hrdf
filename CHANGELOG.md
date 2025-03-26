@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.5.0
+
+Changes:
+- Added support for T25 actuators and hardware
+
 ## v1.4.0
 
 Changes:

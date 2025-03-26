@@ -6,7 +6,7 @@ Examples of this format in use can be seen in the kits in this directory.
 
 ## Version and versioning
 
-The following specification is version 1.5.0 of this format.
+The following specification is version 1.6.0 of this format.
 
 The version numbering follows semantic versioning practices. Major version changes (e.g., 1.x.x->2.x.x) imply non-backwards compatible changes, whereas minor version changes (e.g., 1.3.0->1.4.0) imply backwards compatibility: existing robot configuration files will work with the updated specification, although files specifically using the newer specification may not be supported by tools using an older version of the standard.  Revision changes (1.4.2 -> 1.4.3) imply only clarification of the documentation, and should be treated as compatible.  Each new version change of the specification will be associated with a tag/release in this repository.
 
@@ -34,6 +34,7 @@ The robot element is the root element of a robot model.
   - 1.3.0
   - 1.4.0
   - 1.5.0
+  - 1.6.0
 
 **Optional Attributes:**
 - `rot` (rotation matrix) specify the rotation of the base frame of the model; defaults to identity matrix.
@@ -65,7 +66,7 @@ Note that the parsing of the element name (e.g., `actuator`) is case sensitive, 
 
 ### `<actuator>`
 
-The actuator element represents actuators such as the X5-4.  It is assumed to have a mass and inertia, as well as a single output interface.  It is assumed that there is a single associated degree of freedom in the robot model with this element.  The `actuator` element can have no child elements.
+The actuator element represents actuators such as the T5-4.  It is assumed to have a mass and inertia, as well as a single output interface.  It is assumed that there is a single associated degree of freedom in the robot model with this element.  The `actuator` element can have no child elements.
 
 **Required attributes:**
 - `type` (string/enum) Currently supported values:
@@ -84,6 +85,9 @@ The actuator element represents actuators such as the X5-4.  It is assumed to ha
   - T8-3
   - T8-9
   - T8-16
+  - T25-8
+  - T25-20
+  - T25-40
 
 **Content:**
 None
@@ -91,7 +95,7 @@ None
 **Example:**
 
 ```xml
-<actuator type="X5-9"/>
+<actuator type="T5-9"/>
 ```
 
 ### `<link>`
@@ -104,15 +108,17 @@ Note that the "extension" and "twist" values correspond to those shown on http:/
 - `type` (string/enum) The style of link.  Currently supported values::
   - X5
   - R8
+  - RT25
+  - RT25-R8 (adaptor link for RT25 to R8 series hardware)
 - `extension` (floating point formula, meters)
 - `twist` (floating point formula, radians)
 
 **Optional attributes:**  
 - `input` (string/enum) The type of the input interface.  Defaults to `RightAngle`. Currently supported values:
-  - RightAngle (supported for both X5 and R8 link types)
+  - RightAngle (supported for X5, R8, RT25, and RT25-R8 link types)
   - Inline (supported for both X5 and R8 link types)
 - `output` (string/enum) The type of the output interface.  Defaults to `RightAngle`. Currently supported values:
-  - RightAngle (supported for both X5 and R8 link types)
+  - RightAngle (supported for both X5, R8, RT25, and RT25-R8 link types)
   - Inline (supported for both X5 and R8 link types)
 
 **Content:**
@@ -121,7 +127,7 @@ None
 **Example:**
 
 ```xml
-<link type="X5" extension="0.325" twist="pi/2"/>
+<link type="R8" extension="0.325" twist="pi/2"/>
 ```
 
 ### `<bracket>`
@@ -142,6 +148,10 @@ The bracket element refers to a rigid body that connects modules, such as a ligh
   - R8HeavyLeftOutside
   - R8HeavyRightInside
   - R8HeavyRightOutside  
+  - RT25HeavyLeftInside
+  - RT25HeavyLeftOutside
+  - RT25HeavyRightInside
+  - RT25HeavyRightOutside  
 
 **Content:**
 Zero or more of the following:
@@ -283,7 +293,7 @@ Note: the HRDF file is ill-formed and should generate a parsing error if both `m
 **Example:**
 
 ```xml
-<actuator type="X5-9" mass_offset="0.2"/>
+<actuator type="T5-9" mass_offset="0.2"/>
 ```
 
 ### `<include>`
@@ -478,8 +488,10 @@ Each robot model element has an input interface and zero or more output interfac
 
 - `X-AH` X Actuator Housing Interface
 - `R-AH` R Actuator Housing Interface
+- `RT25-AH` R/T-25 Actuator Housing Interface
 - `X-AO` X Actuator Output Interface
 - `R-AO` R Actuator Output Interface
+- `RT25-AO` R/T-25 Actuator Output Interface
 
 Compatible interfaces are defined as having the same type and different polarity.  Adjacent elements must have compatible interfaces for the HRDF file to be valid.  In other words, in the following file, the output interface of `elem1` must be the same type but different polarity as that of the input interface of `elem2`.
 
@@ -497,12 +509,15 @@ A full list of element interface types is given below. An asterisk (`*`) in the 
 | Element | Type | Input Interface | Output Interface |
 | ------- | ---- | --------------- | ---------------- |
 | `actuator` | `X*` | `X-AH-A` | `X-AO-A` |
-| `actuator` | `R*` | `R-AH-A` | `R-AO-A` |
-| `actuator` | `T*` | `R-AH-A` | `R-AO-A` |
+| `actuator` | `R8*`, `T5*`, `T8*` | `R-AH-A` | `R-AO-A` |
+| `actuator` | `T25*` | `RT25-AH-A` | `RT25-AO-A` |
 | `bracket` | `X*` | `X-AO-B` | `X-AH-B` |
-| `bracket` | `R*` | `R-AO-B` | `R-AH-B` |
+| `bracket` | `R8*` | `R-AO-B` | `R-AH-B` |
+| `bracket` | `RT25*` | `RT25-AO-B` | `RT25-AH-B` |
 | `link` | `X*` | `X-AO-B` | `X-AH-B` |
-| `link` | `R*` | `R-AO-B` | `R-AH-B` |
+| `link` | `R8` | `R-AO-B` | `R-AH-B` |
+| `link` | `RT25` | `RT25-AO-B` | `RT25-AH-B` |
+| `link` | `RT25-R8` | `RT25-AO-B` | `R-AH-B` |
 | `end-effector` | `Custom` | any | none |
 | `end-effector` | `X5Parallel` | `X-AO-B` | none |
 | `end-effector` | `R8Parallel` | `R-AO-B` | none |
