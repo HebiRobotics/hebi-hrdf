@@ -88,6 +88,9 @@ The actuator element represents actuators such as the T5-4.  It is assumed to ha
   - T25-8
   - T25-20
   - T25-40
+  - R25-8
+  - R25-20
+  - R25-40
 
 **Content:**
 None
@@ -106,20 +109,20 @@ Note that the "extension" and "twist" values correspond to those shown on http:/
 
 **Required attributes:**
 - `type` (string/enum) The style of link.  Currently supported values::
-  - X5
-  - R8
-  - RT25
-  - RT25-R8 (adaptor link for RT25 to R8 series hardware)
+  - X5 (compatible with X5 and X8)
+  - R8 (compatible with T5, T8, and R8 but not X-series)
+  - R25 (compatible with T25 and R25)
+  - R25-R8 (adaptor link for R25 to R8 series hardware)
 - `extension` (floating point formula, meters)
 - `twist` (floating point formula, radians)
 
 **Optional attributes:**  
 - `input` (string/enum) The type of the input interface.  Defaults to `RightAngle`. Currently supported values:
-  - RightAngle (supported for X5, R8, RT25, and RT25-R8 link types)
-  - Inline (supported for both X5 and R8 link types)
+  - RightAngle (supported for X5, R8, R25, and R25-R8 link types)
+  - Inline (supported for both X5, R8, R25, and R25-R8 link types)
 - `output` (string/enum) The type of the output interface.  Defaults to `RightAngle`. Currently supported values:
-  - RightAngle (supported for both X5, R8, RT25, and RT25-R8 link types)
-  - Inline (supported for both X5 and R8 link types)
+  - RightAngle (supported for both X5, R8, R25, and R25-R8 link types)
+  - Inline (supported for both X5, R8, and R25 link types)
 
 **Content:**
 None
@@ -148,10 +151,12 @@ The bracket element refers to a rigid body that connects modules, such as a ligh
   - R8HeavyLeftOutside
   - R8HeavyRightInside
   - R8HeavyRightOutside  
-  - RT25HeavyLeftInside
-  - RT25HeavyLeftOutside
-  - RT25HeavyRightInside
-  - RT25HeavyRightOutside  
+  - R25LightLeft
+  - R25LightRight
+  - R25HeavyLeftInside
+  - R25HeavyLeftOutside
+  - R25HeavyRightInside
+  - R25HeavyRightOutside
 
 **Content:**
 Zero or more of the following:
@@ -488,10 +493,10 @@ Each robot model element has an input interface and zero or more output interfac
 
 - `X-AH` X Actuator Housing Interface
 - `R-AH` R Actuator Housing Interface
-- `RT25-AH` R/T-25 Actuator Housing Interface
+- `R25-AH` R/T-25 Actuator Housing Interface
 - `X-AO` X Actuator Output Interface
 - `R-AO` R Actuator Output Interface
-- `RT25-AO` R/T-25 Actuator Output Interface
+- `R25-AO` R/T-25 Actuator Output Interface
 
 Compatible interfaces are defined as having the same type and different polarity.  Adjacent elements must have compatible interfaces for the HRDF file to be valid.  In other words, in the following file, the output interface of `elem1` must be the same type but different polarity as that of the input interface of `elem2`.
 
@@ -509,18 +514,18 @@ A full list of element interface types is given below. An asterisk (`*`) in the 
 | Element | Type | Input Interface | Output Interface |
 | ------- | ---- | --------------- | ---------------- |
 | `actuator` | `X*` | `X-AH-A` | `X-AO-A` |
-| `actuator` | `R8*`, `T5*`, `T8*` | `R-AH-A` | `R-AO-A` |
-| `actuator` | `T25*` | `RT25-AH-A` | `RT25-AO-A` |
+| `actuator` | `R8*`, `T5*`, `T8*` | `R8-AH-A` | `R8-AO-A` |
+| `actuator` | `R25*`, 'T25*' | `R25-AH-A` | `R25-AO-A` |
 | `bracket` | `X*` | `X-AO-B` | `X-AH-B` |
-| `bracket` | `R8*` | `R-AO-B` | `R-AH-B` |
-| `bracket` | `RT25*` | `RT25-AO-B` | `RT25-AH-B` |
+| `bracket` | `R8*` | `R8-AO-B` | `R8-AH-B` |
+| `bracket` | `R25*` | `R25-AO-B` | `R25-AH-B` |
 | `link` | `X*` | `X-AO-B` | `X-AH-B` |
-| `link` | `R8` | `R-AO-B` | `R-AH-B` |
-| `link` | `RT25` | `RT25-AO-B` | `RT25-AH-B` |
-| `link` | `RT25-R8` | `RT25-AO-B` | `R-AH-B` |
+| `link` | `R8` | `R8-AO-B` | `R8-AH-B` |
+| `link` | `R25` | `R25-AO-B` | `R25-AH-B` |
+| `link` | `R25-R8` | `R25-AO-B` | `R8-AH-B` |
 | `end-effector` | `Custom` | any | none |
 | `end-effector` | `X5Parallel` | `X-AO-B` | none |
-| `end-effector` | `R8Parallel` | `R-AO-B` | none |
+| `end-effector` | `R8Parallel` | `R8-AO-B` | none |
 | `rigid-body` | n/a | any | any |
 | `joint` | n/a | any | any |
 

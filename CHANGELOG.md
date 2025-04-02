@@ -3,7 +3,7 @@
 ## v1.6.0
 
 Changes:
-- Added support for T25 actuators and hardware
+- Added support for R25 and T25 actuators and hardware
 
 ## v1.5.0
 
