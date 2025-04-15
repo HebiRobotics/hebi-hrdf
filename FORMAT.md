@@ -492,10 +492,10 @@ These both define the same structure, but the former has less nesting and is mor
 Each robot model element has an input interface and zero or more output interface, each of a specific type and polarity. Following is a list of interface types; each listed type has two polarities, `A` and `B`.  
 
 - `X-AH` X Actuator Housing Interface
-- `R-AH` R Actuator Housing Interface
+- `R8-AH` R Actuator Housing Interface
 - `R25-AH` R/T-25 Actuator Housing Interface
 - `X-AO` X Actuator Output Interface
-- `R-AO` R Actuator Output Interface
+- `R8-AO` R Actuator Output Interface
 - `R25-AO` R/T-25 Actuator Output Interface
 
 Compatible interfaces are defined as having the same type and different polarity.  Adjacent elements must have compatible interfaces for the HRDF file to be valid.  In other words, in the following file, the output interface of `elem1` must be the same type but different polarity as that of the input interface of `elem2`.
