@@ -85,12 +85,12 @@ The actuator element represents actuators such as the T5-4.  It is assumed to ha
   - T8-3
   - T8-9
   - T8-16
-  - T25-8
-  - T25-20
-  - T25-40
   - R25-8
   - R25-20
   - R25-40
+  - T25-8
+  - T25-20
+  - T25-40
 
 **Content:**
 None
