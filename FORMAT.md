@@ -6,7 +6,7 @@ Examples of this format in use can be seen in the kits in this directory.
 
 ## Version and versioning
 
-The following specification is version 1.6.0 of this format.
+The following specification is version 1.7.0 of this format.
 
 The version numbering follows semantic versioning practices. Major version changes (e.g., 1.x.x->2.x.x) imply non-backwards compatible changes, whereas minor version changes (e.g., 1.3.0->1.4.0) imply backwards compatibility: existing robot configuration files will work with the updated specification, although files specifically using the newer specification may not be supported by tools using an older version of the standard.  Revision changes (1.4.2 -> 1.4.3) imply only clarification of the documentation, and should be treated as compatible.  Each new version change of the specification will be associated with a tag/release in this repository.
 
@@ -35,6 +35,7 @@ The robot element is the root element of a robot model.
   - 1.4.0
   - 1.5.0
   - 1.6.0
+  - 1.7.0
 
 **Optional Attributes:**
 - `rot` (rotation matrix) specify the rotation of the base frame of the model; defaults to identity matrix.
@@ -91,6 +92,9 @@ The actuator element represents actuators such as the T5-4.  It is assumed to ha
   - T25-8
   - T25-20
   - T25-40
+  - H25-45
+  - H25-90
+  - H25-140
 
 **Content:**
 None
@@ -112,17 +116,18 @@ Note that the "extension" and "twist" values correspond to those shown on http:/
   - X5 (compatible with X5 and X8)
   - R8 (compatible with T5, T8, and R8 but not X-series)
   - R25 (compatible with T25 and R25)
-  - R25-R8 (adaptor link for R25 to R8 series hardware)
+  - R25-R8 (adapter link for R25 to R8 series hardware)
+  - H25 (compatible with H25)
 - `extension` (floating point formula, meters)
 - `twist` (floating point formula, radians)
 
 **Optional attributes:**  
-- `input` (string/enum) The type of the input interface.  Defaults to `RightAngle`. Currently supported values:
+- `input` (string/enum) The type of the input interface. Defaults to `RightAngle` if supported (X5, R8, R25, R25-R8) and `Inline` otherwise (H25). Currently supported values:
   - RightAngle (supported for X5, R8, R25, and R25-R8 link types)
-  - Inline (supported for both X5, R8, R25, and R25-R8 link types)
-- `output` (string/enum) The type of the output interface.  Defaults to `RightAngle`. Currently supported values:
-  - RightAngle (supported for both X5, R8, R25, and R25-R8 link types)
-  - Inline (supported for both X5, R8, and R25 link types)
+  - Inline (supported for X5, R8, R25, R25-R8, and H25 link types)
+- `output` (string/enum) The type of the output interface. Defaults to `RightAngle` if supported (X5, R8, R25, R25-R8) and `Inline` otherwise (H25). Currently supported values:
+  - RightAngle (supported for X5, R8, R25, and R25-R8 link types)
+  - Inline (supported for X5, R8, R25, and H25 link types)
 
 **Content:**
 None
@@ -305,7 +310,7 @@ Note: the HRDF file is ill-formed and should generate a parsing error if both `m
 
 The `include` element is used to allow commonly used snippets of HRDF to be reused in a single file or in multiple files.  The `include` element is used in place of a normal robot model element, and the filename referenced must be a complete and valid .HRDF file.  The contents of the "robot" element of this .HRDF file replace the "include" element in the final HRDF.
 
-Note that any attributes on the "robot" element in the included are ignored.  A compliant parser should generate and error if the file cannot be found.
+Note that any attributes on the "robot" element in the included are ignored.  A compliant parser should generate an error if the file cannot be found.
 
 **Required Attributes:**
 - `path` (string) Relative path to the HRDF file to be included. A forward slash should be used as a file separation character. Paths are relative to the current HRDF file being parsed; absolute paths are not allowed.  The double dot ".." pattern moves up a directory.
@@ -489,7 +494,7 @@ These both define the same structure, but the former has less nesting and is mor
 
 **Interface types:**
 
-Each robot model element has an input interface and zero or more output interface, each of a specific type and polarity. Following is a list of interface types; each listed type has two polarities, `A` and `B`.  
+Each robot model element has an input interface and zero or more output interfaces, each of a specific type and polarity. Following is a list of interface types; each listed type has two polarities, `A` and `B`.
 
 - `X-AH` X Actuator Housing Interface
 - `R8-AH` R Actuator Housing Interface
@@ -497,6 +502,7 @@ Each robot model element has an input interface and zero or more output interfac
 - `X-AO` X Actuator Output Interface
 - `R8-AO` R Actuator Output Interface
 - `R25-AO` R/T-25 Actuator Output Interface
+- `H25` H25 Actuator Interface
 
 Compatible interfaces are defined as having the same type and different polarity.  Adjacent elements must have compatible interfaces for the HRDF file to be valid.  In other words, in the following file, the output interface of `elem1` must be the same type but different polarity as that of the input interface of `elem2`.
 
@@ -516,6 +522,7 @@ A full list of element interface types is given below. An asterisk (`*`) in the 
 | `actuator` | `X*` | `X-AH-A` | `X-AO-A` |
 | `actuator` | `R8*`, `T5*`, `T8*` | `R8-AH-A` | `R8-AO-A` |
 | `actuator` | `R25*`, 'T25*' | `R25-AH-A` | `R25-AO-A` |
+| `actuator` | `H25*` | `H25-A` | `H25-B` |
 | `bracket` | `X*` | `X-AO-B` | `X-AH-B` |
 | `bracket` | `R8*` | `R8-AO-B` | `R8-AH-B` |
 | `bracket` | `R25*` | `R25-AO-B` | `R25-AH-B` |
@@ -523,6 +530,7 @@ A full list of element interface types is given below. An asterisk (`*`) in the 
 | `link` | `R8` | `R8-AO-B` | `R8-AH-B` |
 | `link` | `R25` | `R25-AO-B` | `R25-AH-B` |
 | `link` | `R25-R8` | `R25-AO-B` | `R8-AH-B` |
+| `link` | `H25` | `H25-A` | `H25-B` |
 | `end-effector` | `Custom` | any | none |
 | `end-effector` | `X5Parallel` | `X-AO-B` | none |
 | `end-effector` | `R8Parallel` | `R8-AO-B` | none |
@@ -530,7 +538,7 @@ A full list of element interface types is given below. An asterisk (`*`) in the 
 | `joint` | n/a | any | any |
 
 Note that the T-series actuators share the R-series bolt patterns and therefore have the same
-interface types.
+interface types. Also note that the H25-series has a single interface type with opposite polarities on the input and output, as opposed to other actuator series where the input and output interfaces are physically different.
 
 ## Types
 

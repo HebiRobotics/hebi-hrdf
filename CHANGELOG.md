@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.7.0
+
+Changes:
+- Added support for H25 actuators and hardware.
+
 ## v1.6.0
 
 Changes:
