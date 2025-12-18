@@ -3,7 +3,8 @@
 ## v1.7.0
 
 Changes:
-- Added support for H25 actuators and hardware.
+- Added support for H25 actuators and hardware
+- Added support for reversed actuators, link interfaces, and brackets
 
 ## v1.6.0
 

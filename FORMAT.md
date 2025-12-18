@@ -96,6 +96,11 @@ The actuator element represents actuators such as the T5-4.  It is assumed to ha
   - H25-90
   - H25-140
 
+**Optional attributes:**
+- `reversed` (string/enum) Whether or not the actuator is reversed, so that the actuator's normal output rather than input is connected to the previous element. Defaults to `False`. If `True`, then the interface types (see below) are reversed for purposes of validating connections between robot model elements.
+  - False
+  - True
+
 **Content:**
 None
 
@@ -128,14 +133,47 @@ Note that the "extension" and "twist" values correspond to those shown on http:/
 - `output` (string/enum) The type of the output interface. Defaults to `RightAngle` if supported (X5, R8, R25, R25-R8) and `Inline` otherwise (H25). Currently supported values:
   - RightAngle (supported for X5, R8, R25, and R25-R8 link types)
   - Inline (supported for X5, R8, R25, and H25 link types)
+- `input-reversed` (string/enum) If `True`, treat the `input` interface like an `output` interface for purposes of the physical interface type (validating with interface types below) and the enum options above. Defaults to `False`.
+  - False
+  - True
+- `output-reversed` (string/enum) If `True`, treat the `output` interface like an `input` interface for purposes of the physical interface type (validating with interface types below) and the enum options above. Defaults to `False`.
+  - False
+  - True
+
 
 **Content:**
 None
 
 **Example:**
 
+Simple right-angle link that would be placed between R8-series actuators: 
+
 ```xml
 <link type="R8" extension="0.325" twist="pi/2"/>
+```
+
+Reversing a module will require reversing the inputs or outputs of attached links:
+
+```xml
+<actuator type="T5-9" reversed="True"/>
+<link type="R8" extension="0.325" twist="pi/2" input-reversed="True"/>
+<actuator type="T5-9"/>
+```
+
+```xml
+<actuator type="T5-9"/>
+<link type="R8" extension="0.325" twist="pi/2" output-reversed="True"/>
+<actuator type="T5-9" reversed="True"/>
+```
+
+If reversing the input or output interface, restrictions on the corresponding types will be apply:
+
+```xml
+<actuator type="R25-20" reversed="True"/>
+<!-- It would be an error to set input="Inline", since the reversed input's
+types are restricted to those of the standard output for this link, which
+does not support the "Inline" type -->
+<link type="R25-R8" extension="0.325" twist="pi/2" input-reversed="True" input="RightAngle"/>
 ```
 
 ### `<bracket>`
@@ -162,6 +200,11 @@ The bracket element refers to a rigid body that connects modules, such as a ligh
   - R25HeavyLeftOutside
   - R25HeavyRightInside
   - R25HeavyRightOutside
+
+**Optional attributes:**
+- `reversed` (string/enum) Whether or not the bracket is reversed, so that the bracket's normal output rather than input is connected to the previous element. Defaults to `False`. If `True`, then the interface types (see below) are reversed for purposes of validating connections between robot model elements.
+  - False
+  - True (Currently compatible for all bracket types, but will not be compatible with any future bracket with multiple outputs)
 
 **Content:**
 Zero or more of the following:
@@ -539,6 +582,10 @@ A full list of element interface types is given below. An asterisk (`*`) in the 
 
 Note that the T-series actuators share the R-series bolt patterns and therefore have the same
 interface types. Also note that the H25-series has a single interface type with opposite polarities on the input and output, as opposed to other actuator series where the input and output interfaces are physically different.
+
+### Reversed interface types
+
+Actuators, links, and brackets can be "reversed".  If the `reverse` attribute is set to `True` for an actuator or bracket, then the interface types in the above table should be switched.  For example, a reversed `R25-40` would have an input interface of `R25-AO-A` and an output interface of `R25-AH-A`.  For a link, this can be done per side of the link; if the input of an `R8` link is reversed, it would have a type of `R8-AH-B` instead of `R8-AO-B`.
 
 ## Types
 
