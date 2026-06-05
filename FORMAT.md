@@ -133,10 +133,10 @@ Note that the "extension" and "twist" values correspond to those shown on http:/
 - `output` (string/enum) The type of the output interface. Defaults to `RightAngle` if supported (X5, R8, R25, R25-R8) and `Inline` otherwise (H25). Currently supported values:
   - RightAngle (supported for X5, R8, R25, and R25-R8 link types)
   - Inline (supported for X5, R8, R25, and H25 link types)
-- `input-reversed` (string/enum) If `True`, treat the `input` interface like an `output` interface for purposes of the physical interface type (validating with interface types below) and the enum options above. Defaults to `False`.
+- `input_reversed` (string/enum) If `True`, treat the `input` interface like an `output` interface for purposes of the physical interface type (validating with interface types below) and the enum options above. Defaults to `False`.
   - False
   - True
-- `output-reversed` (string/enum) If `True`, treat the `output` interface like an `input` interface for purposes of the physical interface type (validating with interface types below) and the enum options above. Defaults to `False`.
+- `output_reversed` (string/enum) If `True`, treat the `output` interface like an `input` interface for purposes of the physical interface type (validating with interface types below) and the enum options above. Defaults to `False`.
   - False
   - True
 
@@ -156,13 +156,13 @@ Reversing a module will require reversing the inputs or outputs of attached link
 
 ```xml
 <actuator type="T5-9" reversed="True"/>
-<link type="R8" extension="0.325" twist="pi/2" input-reversed="True"/>
+<link type="R8" extension="0.325" twist="pi/2" input_reversed="True"/>
 <actuator type="T5-9"/>
 ```
 
 ```xml
 <actuator type="T5-9"/>
-<link type="R8" extension="0.325" twist="pi/2" output-reversed="True"/>
+<link type="R8" extension="0.325" twist="pi/2" output_reversed="True"/>
 <actuator type="T5-9" reversed="True"/>
 ```
 
@@ -173,7 +173,7 @@ If reversing the input or output interface, restrictions on the corresponding ty
 <!-- It would be an error to set input="Inline", since the reversed input's
 types are restricted to those of the standard output for this link, which
 does not support the "Inline" type -->
-<link type="R25-R8" extension="0.325" twist="pi/2" input-reversed="True" input="RightAngle"/>
+<link type="R25-R8" extension="0.325" twist="pi/2" input_reversed="True" input="RightAngle"/>
 ```
 
 ### `<bracket>`
