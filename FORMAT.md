@@ -97,7 +97,7 @@ The actuator element represents actuators such as the T5-4.  It is assumed to ha
   - H25-140
 
 **Optional attributes:**
-- `reversed` (string/enum) Whether or not the actuator is reversed, so that the actuator's normal output rather than input is connected to the previous element. Defaults to `False`. If `True`, then the interface types (see below) are reversed for purposes of validating connections between robot model elements.
+- `reversed` (string/enum) Whether or not the actuator is reversed, so that the actuator's normal output rather than input is connected to the previous element. Defaults to `False`. If `True`, then the interface types (see below) are reversed for purposes of frame conventions and validating connections between robot model elements.
   - False
   - True
 
@@ -133,10 +133,10 @@ Note that the "extension" and "twist" values correspond to those shown on http:/
 - `output` (string/enum) The type of the output interface. Defaults to `RightAngle` if supported (X5, R8, R25, R25-R8) and `Inline` otherwise (H25). Currently supported values:
   - RightAngle (supported for X5, R8, R25, and R25-R8 link types)
   - Inline (supported for X5, R8, R25, and H25 link types)
-- `input_reversed` (string/enum) If `True`, treat the `input` interface like an `output` interface for purposes of the physical interface type (validating with interface types below) and the enum options above. Defaults to `False`.
+- `input_reversed` (string/enum) If `True`, treat the `input` interface like an `output` interface for purposes of the physical interface type (validating with interface types below), frame conventions, and the enum options above. Defaults to `False`.
   - False
   - True
-- `output_reversed` (string/enum) If `True`, treat the `output` interface like an `input` interface for purposes of the physical interface type (validating with interface types below) and the enum options above. Defaults to `False`.
+- `output_reversed` (string/enum) If `True`, treat the `output` interface like an `input` interface for purposes of the physical interface type (validating with interface types below), frame conventions, and the enum options above. Defaults to `False`.
   - False
   - True
 
@@ -202,7 +202,7 @@ The bracket element refers to a rigid body that connects modules, such as a ligh
   - R25HeavyRightOutside
 
 **Optional attributes:**
-- `reversed` (string/enum) Whether or not the bracket is reversed, so that the bracket's normal output rather than input is connected to the previous element. Defaults to `False`. If `True`, then the interface types (see below) are reversed for purposes of validating connections between robot model elements.
+- `reversed` (string/enum) Whether or not the bracket is reversed, so that the bracket's normal output rather than input is connected to the previous element and for frame conventions. Defaults to `False`. If `True`, then the interface types (see below) are reversed for purposes of validating connections between robot model elements.
   - False
   - True (Currently compatible for all bracket types, but will not be compatible with any future bracket with multiple outputs)
 
@@ -586,6 +586,10 @@ interface types. Also note that the H25-series has a single interface type with 
 ### Reversed interface types
 
 Actuators, links, and brackets can be "reversed".  If the `reverse` attribute is set to `True` for an actuator or bracket, then the interface types in the above table should be switched.  For example, a reversed `R25-40` would have an input interface of `R25-AO-A` and an output interface of `R25-AH-A`.  For a link, this can be done per side of the link; if the input of an `R8` link is reversed, it would have a type of `R8-AH-B` instead of `R8-AO-B`.
+
+For reversed elements, the frames relative to the physical interfaces remain consistent.  This means for a forward actuator, the Z axis points into the input (the housing side for a typical T-series module) and out of the output (the rotating side on the T-series).  On the reversed actuator, the input is now the rotating side; in this case the Z-axis points out of the rotating element.  The output is the housing side, and the Z-axis points into the actuator here.
+
+This is counterintuitive from the point of view that an "output" frame no longer is always "Z axis positive out of the output".  However, this does mean that the frame indicators engraved on modules are consistent for reversed modules.
 
 ## Types
 
