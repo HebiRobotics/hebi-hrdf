@@ -585,7 +585,7 @@ interface types. Also note that the H25-series has a single interface type with 
 
 ### Reversed interface types
 
-Actuators, links, and brackets can be "reversed".  If the `reverse` attribute is set to `True` for an actuator or bracket, then the interface types in the above table should be switched.  For example, a reversed `R25-40` would have an input interface of `R25-AO-A` and an output interface of `R25-AH-A`.  For a link, this can be done per side of the link; if the input of an `R8` link is reversed, it would have a type of `R8-AH-B` instead of `R8-AO-B`.
+Actuators, links, and brackets can be "reversed".  If the `reversed` attribute is set to `True` for an actuator or bracket, then the interface types in the above table should be switched.  For example, a reversed `R25-40` would have an input interface of `R25-AO-A` and an output interface of `R25-AH-A`.  For a link, this can be done per side of the link; if the input of an `R8` link is reversed, it would have a type of `R8-AH-B` instead of `R8-AO-B`.
 
 For reversed elements, the frames relative to the physical interfaces remain consistent.  This means for a forward actuator, the Z axis points into the input (the housing side for a typical T-series module) and out of the output (the rotating side on the T-series).  On the reversed actuator, the input is now the rotating side; in this case the Z-axis points out of the rotating element.  The output is the housing side, and the Z-axis points into the actuator here.
 
