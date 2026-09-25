@@ -101,6 +101,9 @@ The actuator element represents actuators such as the T5-4.  It is assumed to ha
   - T8-3+
   - T8-9+
   - T8-16+
+  - H25-45-B
+  - H25-90-B
+  - H25-140-B
 
 **Optional attributes:**
 - `reversed` (string/enum) Whether or not the actuator is reversed, so that the actuator's normal output rather than input is connected to the previous element. Defaults to `False`. If `True`, then the interface types (see below) are reversed for purposes of frame conventions and validating connections between robot model elements.
