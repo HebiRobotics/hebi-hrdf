@@ -200,6 +200,8 @@ The bracket element refers to a rigid body that connects modules, such as a ligh
   - R25HeavyLeftOutside
   - R25HeavyRightInside
   - R25HeavyRightOutside
+  - R25-R8LightLeft
+  - R25-R8LightRight
 
 **Optional attributes:**
 - `reversed` (string/enum) Whether or not the bracket is reversed, so that the bracket's normal output rather than input is connected to the previous element and for frame conventions. Defaults to `False`. If `True`, then the interface types (see below) are reversed for purposes of validating connections between robot model elements.

@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.8.0 (in draft)
+
+Changes:
+- Added support for R25-R8 light bracket
+
 ## v1.7.0
 
 Changes:
