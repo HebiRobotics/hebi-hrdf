@@ -4,6 +4,7 @@
 
 Changes:
 - Added support for R25-R8 light bracket
+- Added plus actuator types
 
 ## v1.7.0
 
