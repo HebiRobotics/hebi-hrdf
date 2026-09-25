@@ -6,7 +6,7 @@ Examples of this format in use can be seen in the kits in this directory.
 
 ## Version and versioning
 
-The following specification is version 1.7.0 of this format.
+The following specification is version 1.8.0 of this format.
 
 The version numbering follows semantic versioning practices. Major version changes (e.g., 1.x.x->2.x.x) imply non-backwards compatible changes, whereas minor version changes (e.g., 1.3.0->1.4.0) imply backwards compatibility: existing robot configuration files will work with the updated specification, although files specifically using the newer specification may not be supported by tools using an older version of the standard.  Revision changes (1.4.2 -> 1.4.3) imply only clarification of the documentation, and should be treated as compatible.  Each new version change of the specification will be associated with a tag/release in this repository.
 
@@ -36,6 +36,7 @@ The robot element is the root element of a robot model.
   - 1.5.0
   - 1.6.0
   - 1.7.0
+  - 1.8.0
 
 **Optional Attributes:**
 - `rot` (rotation matrix) specify the rotation of the base frame of the model; defaults to identity matrix.
@@ -95,6 +96,15 @@ The actuator element represents actuators such as the T5-4.  It is assumed to ha
   - H25-45
   - H25-90
   - H25-140
+  - R8-3+
+  - R8-9+
+  - R8-16+
+  - T8-3+
+  - T8-9+
+  - T8-16+
+  - H25-45-B
+  - H25-90-B
+  - H25-140-B
 
 **Optional attributes:**
 - `reversed` (string/enum) Whether or not the actuator is reversed, so that the actuator's normal output rather than input is connected to the previous element. Defaults to `False`. If `True`, then the interface types (see below) are reversed for purposes of frame conventions and validating connections between robot model elements.
@@ -200,6 +210,8 @@ The bracket element refers to a rigid body that connects modules, such as a ligh
   - R25HeavyLeftOutside
   - R25HeavyRightInside
   - R25HeavyRightOutside
+  - R25-R8LightLeft
+  - R25-R8LightRight
 
 **Optional attributes:**
 - `reversed` (string/enum) Whether or not the bracket is reversed, so that the bracket's normal output rather than input is connected to the previous element and for frame conventions. Defaults to `False`. If `True`, then the interface types (see below) are reversed for purposes of validating connections between robot model elements.
