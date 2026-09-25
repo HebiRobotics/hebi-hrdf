@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.8.0 (in draft)
+
+Changes:
+- Added support for R25-R8 light bracket
+- Added R/T plus actuator types
+- Added H-series with brakes to actuator types
+
 ## v1.7.0
 
 Changes:
