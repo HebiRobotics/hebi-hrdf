@@ -6,7 +6,7 @@ Examples of this format in use can be seen in the kits in this directory.
 
 ## Version and versioning
 
-The following specification is version 1.8.0 of this format.
+The following specification is version 1.9.0 of this format.
 
 The version numbering follows semantic versioning practices. Major version changes (e.g., 1.x.x->2.x.x) imply non-backwards compatible changes, whereas minor version changes (e.g., 1.3.0->1.4.0) imply backwards compatibility: existing robot configuration files will work with the updated specification, although files specifically using the newer specification may not be supported by tools using an older version of the standard.  Revision changes (1.4.2 -> 1.4.3) imply only clarification of the documentation, and should be treated as compatible.  Each new version change of the specification will be associated with a tag/release in this repository.
 
@@ -37,6 +37,7 @@ The robot element is the root element of a robot model.
   - 1.6.0
   - 1.7.0
   - 1.8.0
+  - 1.9.0
 
 **Optional Attributes:**
 - `rot` (rotation matrix) specify the rotation of the base frame of the model; defaults to identity matrix.
@@ -212,6 +213,10 @@ The bracket element refers to a rigid body that connects modules, such as a ligh
   - R25HeavyRightOutside
   - R25-R8LightLeft
   - R25-R8LightRight
+  - R25-R8HeavyLeftInside
+  - R25-R8HeavyLeftOutside
+  - R25-R8HeavyRightInside
+  - R25-R8HeavyRightOutside
 
 **Optional attributes:**
 - `reversed` (string/enum) Whether or not the bracket is reversed, so that the bracket's normal output rather than input is connected to the previous element and for frame conventions. Defaults to `False`. If `True`, then the interface types (see below) are reversed for purposes of validating connections between robot model elements.
@@ -240,6 +245,12 @@ The rigid body refers to a solid body with mass and one or more outputs. Default
 - `mesh_path` (string): Relative file path or web URL to a file used to store 3D mesh information for visualization purposes. A forward slash should be used as a file separation character. File paths are relative to the current HRDF file being parsed; absolute paths are not allowed.  The double dot ".." pattern moves up a directory.  Web URLs must start with `http://` or `https://`. Supported file types, extensions, and sources (e.g., local vs web) depend on the application consuming the HRDF file for visualization.
 - `mesh_rot` (rotation matrix): specify the rotation of the base frame of the mesh; defaults to identity matrix. Considered an error if present without a `mesh_path` attribute.
 - `mesh_trans` (translation vector): specify the translation to the base frame of the mesh; defaults to (0,0,0). Considered an error if present without a `mesh_path` attribute.
+- `mesh_units` (string/enum or floating point): the length unit of the coordinates in the mesh file. The mesh is scaled into meters before `mesh_rot` and `mesh_trans` are applied. Defaults to `m`. Considered an error if present without a `mesh_path` attribute. Supported values are:
+  - m
+  - cm
+  - mm
+  - in
+  - a floating point number greater than zero, giving the meters per mesh unit (e.g., `0.001` is equivalent to `mm`)
 
 **Content:**
 Zero or more of the following:
@@ -581,6 +592,7 @@ A full list of element interface types is given below. An asterisk (`*`) in the 
 | `bracket` | `X*` | `X-AO-B` | `X-AH-B` |
 | `bracket` | `R8*` | `R8-AO-B` | `R8-AH-B` |
 | `bracket` | `R25*` | `R25-AO-B` | `R25-AH-B` |
+| `bracket` | `R25-R8*` | `R25-AO-B` | `R8-AH-B` |
 | `link` | `X*` | `X-AO-B` | `X-AH-B` |
 | `link` | `R8` | `R8-AO-B` | `R8-AH-B` |
 | `link` | `R25` | `R25-AO-B` | `R25-AH-B` |
