@@ -240,6 +240,7 @@ The rigid body refers to a solid body with mass and one or more outputs. Default
 - `mesh_path` (string): Relative file path or web URL to a file used to store 3D mesh information for visualization purposes. A forward slash should be used as a file separation character. File paths are relative to the current HRDF file being parsed; absolute paths are not allowed.  The double dot ".." pattern moves up a directory.  Web URLs must start with `http://` or `https://`. Supported file types, extensions, and sources (e.g., local vs web) depend on the application consuming the HRDF file for visualization.
 - `mesh_rot` (rotation matrix): specify the rotation of the base frame of the mesh; defaults to identity matrix. Considered an error if present without a `mesh_path` attribute.
 - `mesh_trans` (translation vector): specify the translation to the base frame of the mesh; defaults to (0,0,0). Considered an error if present without a `mesh_path` attribute.
+- `mesh_scale` (floating point formula): uniform scale factor that the coordinates of the mesh file are multiplied by before `mesh_rot` and `mesh_trans` are applied, e.g., `0.001` for a mesh that was exported in millimeters. Must be greater than zero. Defaults to 1. Units that are declared inside the mesh file (e.g., the COLLADA `<unit>` element) are applied first, and `mesh_scale` multiplies on top. Considered an error if present without a `mesh_path` attribute.
 
 **Content:**
 Zero or more of the following:
@@ -251,6 +252,12 @@ Single-output rigid body:
 
 ```xml
 <rigid-body mass="0.5" com_trans="0.25 0 0" output_rot="Rx(pi/4)" output_trans="0.5 0 0"/>
+```
+
+Rigid body with a mesh that was exported in millimeters:
+
+```xml
+<rigid-body mass="0.5" mesh_path="meshes/bracket.stl" mesh_scale="0.001"/>
 ```
 
 Multi-output rigid body (see below for "output" element details):
