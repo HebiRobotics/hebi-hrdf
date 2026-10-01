@@ -245,12 +245,6 @@ The rigid body refers to a solid body with mass and one or more outputs. Default
 - `mesh_path` (string): Relative file path or web URL to a file used to store 3D mesh information for visualization purposes. A forward slash should be used as a file separation character. File paths are relative to the current HRDF file being parsed; absolute paths are not allowed.  The double dot ".." pattern moves up a directory.  Web URLs must start with `http://` or `https://`. Supported file types, extensions, and sources (e.g., local vs web) depend on the application consuming the HRDF file for visualization.
 - `mesh_rot` (rotation matrix): specify the rotation of the base frame of the mesh; defaults to identity matrix. Considered an error if present without a `mesh_path` attribute.
 - `mesh_trans` (translation vector): specify the translation to the base frame of the mesh; defaults to (0,0,0). Considered an error if present without a `mesh_path` attribute.
-- `mesh_units` (string/enum or floating point): the length unit of the coordinates in the mesh file. The mesh is scaled into meters before `mesh_rot` and `mesh_trans` are applied. Defaults to `m`. Considered an error if present without a `mesh_path` attribute. Supported values are:
-  - m
-  - cm
-  - mm
-  - in
-  - a floating point number greater than zero, giving the meters per mesh unit (e.g., `0.001` is equivalent to `mm`)
 
 **Content:**
 Zero or more of the following:
