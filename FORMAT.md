@@ -585,7 +585,8 @@ A full list of element interface types is given below. An asterisk (`*`) in the 
 | `actuator` | `H25*` | `H25-A` | `H25-B` |
 | `bracket` | `X*` | `X-AO-B` | `X-AH-B` |
 | `bracket` | `R8*` | `R8-AO-B` | `R8-AH-B` |
-| `bracket` | `R25*` | `R25-AO-B` | `R25-AH-B` |
+| `bracket` | `R25Light` | `R25-AO-B` | `R25-AH-B` |
+| `bracket` | `R25Heavy` | `R25-AO-B` | `R25-AH-B` |
 | `bracket` | `R25-R8*` | `R25-AO-B` | `R8-AH-B` |
 | `link` | `X*` | `X-AO-B` | `X-AH-B` |
 | `link` | `R8` | `R8-AO-B` | `R8-AH-B` |
