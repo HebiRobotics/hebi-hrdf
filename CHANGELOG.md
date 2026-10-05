@@ -1,6 +1,11 @@
 # Changelog
 
-## v1.8.0 (in draft)
+## v1.9.0
+
+Changes:
+- Added support for R25-R8 heavy brackets
+
+## v1.8.0
 
 Changes:
 - Added support for R25-R8 light bracket
